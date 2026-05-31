@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+  private final CategoryService categoryService;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
@@ -33,6 +34,8 @@ public class AuthService {
     user.setLastName(request.getLastName());
 
     userRepository.save(user);
+
+    categoryService.seedDefaultCategories(user);
 
     String token = jwtService.generateToken(user.getEmail());
     return new AuthResponse(token, user.getEmail());
