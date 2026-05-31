@@ -1,0 +1,15 @@
+# Backend
+backend/target/
+backend/.mvn/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Sekrety 
+backend/src/main/resources/application.properties
+
+# IDE
+.vscode/
+*.class
