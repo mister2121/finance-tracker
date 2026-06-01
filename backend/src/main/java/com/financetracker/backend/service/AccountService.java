@@ -3,6 +3,7 @@ package com.financetracker.backend.service;
 import com.financetracker.backend.dto.request.AccountRequest;
 import com.financetracker.backend.dto.response.AccountResponse;
 import com.financetracker.backend.exception.ResourceNotFoundException;
+import com.financetracker.backend.exception.UnauthorizedException;
 import com.financetracker.backend.model.Account;
 import com.financetracker.backend.model.User;
 import com.financetracker.backend.repository.AccountRepository;
@@ -102,7 +103,7 @@ public class AccountService {
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
         if (!account.getUser().getId().equals(currentUser.getId())) {
-            throw new org.springframework.security.access.AccessDeniedException("No access to this account");
+            throw new UnauthorizedException("No access to this account");
         }
 
         accountRepository.delete(account);

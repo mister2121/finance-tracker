@@ -50,4 +50,15 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
+
+
+  // 3. Obsługa nieautoryzowanego dostępu (401 Unauthorized)
+  @ExceptionHandler(UnauthorizedException.class)
+  public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex) {
+    ErrorResponse error = new ErrorResponse(
+      HttpStatus.UNAUTHORIZED.value(),
+      ex.getMessage()
+    );
+    return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+  }
 }
