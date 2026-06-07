@@ -1,5 +1,7 @@
 package com.financetracker.backend.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,11 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.financetracker.backend.dto.request.TransactionRequest;
 import com.financetracker.backend.dto.response.TransactionResponse;
+import com.financetracker.backend.dto.response.dashboard.ExpenseBreakdownResponse;
+import com.financetracker.backend.dto.response.dashboard.RecentTransactionResponse;
 import com.financetracker.backend.exception.ResourceNotFoundException;
 import com.financetracker.backend.exception.UnauthorizedException;
 import com.financetracker.backend.model.Account;
 import com.financetracker.backend.model.Category;
 import com.financetracker.backend.model.Transaction;
+import com.financetracker.backend.model.TransactionType;
 import com.financetracker.backend.model.User;
 import com.financetracker.backend.repository.AccountRepository;
 import com.financetracker.backend.repository.CategoryRepository;
@@ -140,6 +145,47 @@ public class TransactionService {
     }
 
     transactionRepository.delete(transaction);
+  }
+  // 5. DODATKOWE METODY DO DASHBOARDU - SUMA WYDATKÓW, PRZYCHODÓW, PODZIAŁ WYDATKÓW NA KATEGORIE, OSTATNIE TRANSAKCJE
+  public BigDecimal getTotalExpensesForMonth(UUID userId, int year, int month) {
+    BigDecimal result = transactionRepository.findTotalAmountByTypeAndMonth(userId, TransactionType.EXPENSE, month, year);
+    return result != null ? result : BigDecimal.ZERO;
+  }
+
+  public BigDecimal getTotalIncomeForMonth(UUID userId, int year, int month) {
+    BigDecimal result = transactionRepository.findTotalAmountByTypeAndMonth(userId, TransactionType.INCOME, month, year);
+    return result != null ? result : BigDecimal.ZERO;
+}
+
+  public List<ExpenseBreakdownResponse> getExpensesPerCategory(UUID userId, int year) {
+    List<Object[]> rows = transactionRepository.findExpensesPerCategory(userId, TransactionType.EXPENSE, year);
+    BigDecimal total = rows.stream()
+      .map(row -> (BigDecimal) row[1])
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+    return rows.stream()
+        .map(row -> {
+        BigDecimal amount = (BigDecimal) row[1];
+        BigDecimal percentage = amount
+        .multiply(BigDecimal.valueOf(100))
+        .divide(total, 2, RoundingMode.HALF_UP);
+        return new ExpenseBreakdownResponse((String) row[0], amount, percentage);
+    })
+    .toList();
+  }
+
+  public List<RecentTransactionResponse> getRecentTransactions(UUID userId) {
+    return transactionRepository.findTop5ByUserIdOrderByTransactionDateDesc(userId).stream()
+        .map(t -> new RecentTransactionResponse(
+            t.getId(),
+            t.getNote(),
+            t.getTransactionDate(),
+            t.getType(),
+            t.getAmount(),
+            t.getCategory() != null ? t.getCategory().getName() : null,
+            t.getAccount().getName(),
+            t.getToAccount() != null ? t.getToAccount().getName() : null
+        ))
+        .toList();
   }
 
   private TransactionResponse mapToResponse(Transaction transaction) {
