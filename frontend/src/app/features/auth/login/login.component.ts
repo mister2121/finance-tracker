@@ -3,10 +3,11 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { LoginRequest } from '../../../core/models/auth.model';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {

@@ -1,1 +1,12 @@
-<p>Register page</p>
+<form (ngSubmit)="onSubmit()">
+  <p>First name:</p>
+  <input type="text" name="firstName" [(ngModel)]="firstName" />
+  <p>Last name:</p>
+  <input type="text" name="lastName" [(ngModel)]="lastName" />
+  <p>Email:</p>
+  <input type="email" name="email" [(ngModel)]="email" />
+  <p>Password:</p>
+  <input type="password" name="password" [(ngModel)]="password" /><br />
+  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Register</button>
+</form>
+<a routerLink="/login">Back to login</a>

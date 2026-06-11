@@ -1,4 +1,8 @@
-<p>Dashboard page</p>
+@if (dashboard) {
+  <p>{{ dashboard.wealthSummary.totalNetWorth }}</p>
+  <p>{{ dashboard.transactionSummary.totalIncome }}</p>
+  <p>{{ dashboard.transactionSummary.totalExpenses }}</p>
+}
 <button (click)="onLogout()" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
   Logout
 </button>
