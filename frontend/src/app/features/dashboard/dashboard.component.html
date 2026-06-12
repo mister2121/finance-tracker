@@ -1,8 +1,46 @@
 @if (dashboard) {
-  <p>{{ dashboard.wealthSummary.totalNetWorth }}</p>
-  <p>{{ dashboard.transactionSummary.totalIncome }}</p>
-  <p>{{ dashboard.transactionSummary.totalExpenses }}</p>
+  <main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2">
+    <!-- KARTA LACZNY MAJATEK -->
+    <div class="bg-surface-card rounded-2xl p-5 text-sm text-white">
+      <p class="text-zinc-400">Łączny majątek</p>
+      <p class="text-2xl font-bold">{{ dashboard.wealthSummary.totalNetWorth }} zł</p>
+      <p><span class="text-money-green">+3 500 zł</span> od kwietnia 2026</p>
+    </div>
+
+    <!-- KARTA MIESIECZNY BILANS -->
+    <div class="bg-surface-card rounded-2xl p-5 text-white">
+      <p class="text-sm text-zinc-400">Miesięczny bilans</p>
+      <span class="text-2xl font-bold text-money-green"
+        >+{{ dashboard.transactionSummary.transactionBalance }}</span
+      >
+      <div class="flex flex-col gap-2">
+        <div class="bg-surface-elevated rounded-2xl px-4 py-2 flex justify-between">
+          <p class="text-zinc-400">Przychody</p>
+          <p class="text-money-green font-bold">+{{ dashboard.transactionSummary.totalIncome }}</p>
+        </div>
+        <div class="bg-surface-elevated rounded-2xl px-4 py-2 flex justify-between">
+          <p class="text-zinc-400">Wydatki</p>
+          <p class="text-money-red font-bold">-{{ dashboard.transactionSummary.totalExpenses }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- KARTA LISTA KONT -->
+    <div class="bg-surface-card rounded-2xl p-5 text-white">
+      @for (account of dashboard.wealthSummary.accounts; track account.id) {
+        <div class="flex justify-between">
+          <div>
+            <p>{{ account.name }}</p>
+            <p>{{ account.type }}</p>
+          </div>
+
+          <p>{{ account.balance }} zł</p>
+        </div>
+      }
+    </div>
+
+    <button (click)="onLogout()" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
+      Logout
+    </button>
+  </main>
 }
-<button (click)="onLogout()" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
-  Logout
-</button>
