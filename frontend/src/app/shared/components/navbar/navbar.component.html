@@ -1,0 +1,34 @@
+<!-- mobile  -->
+<nav
+  class="flex justify-around fixed bottom-0 left-0 right-0 bg-surface-card text-zinc-400 lg:hidden"
+>
+  <a routerLink="/dashboard" routerLinkActive="text-brand-purple" class="py-4">Dashboard</a>
+  <a routerLink="/transactions" routerLinkActive="text-brand-purple" class="py-4">Transakcje</a>
+  <a routerLink="/a" routerLinkActive="text-brand-purple" class="py-4">Analiza</a>
+  <a routerLink="/b" routerLinkActive="text-brand-purple" class="py-4">Majątek</a>
+  <a routerLink="/c" routerLinkActive="text-brand-purple" class="py-4">Ustawienia</a>
+</nav>
+
+<!-- DESKTOP -->
+<nav
+  class="hidden lg:flex lg:justify-between lg:items-center lg:px-6 lg:fixed lg:top-0 lg:left-0 lg:right-0 lg:bg-surface-card lg:text-zinc-400"
+>
+  <!-- LOGO LEWO  -->
+  <div class="text-zinc-200 font-bold">Finance Tracker</div>
+  <!-- SRODEK LINKI  -->
+  <div class="flex gap-6">
+    <a routerLink="/dashboard" routerLinkActive="text-brand-purple" class="py-4">Dashboard</a>
+    <a routerLink="/transactions" routerLinkActive="text-brand-purple" class="py-4">Transakcje</a>
+    <a routerLink="/a" routerLinkActive="text-brand-purple" class="py-4">Analiza</a>
+    <a routerLink="/b" routerLinkActive="text-brand-purple" class="py-4">Majątek</a>
+    <a routerLink="/c" routerLinkActive="text-brand-purple" class="py-4">Ustawienia</a>
+  </div>
+
+  <!-- PRAWO AKCJE  -->
+  <div class="flex gap-4">
+    <span class="px-4 py-2 rounded-xl">{{ currentMonth }}</span>
+    <button class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium">
+      + Dodaj transakcje
+    </button>
+  </div>
+</nav>

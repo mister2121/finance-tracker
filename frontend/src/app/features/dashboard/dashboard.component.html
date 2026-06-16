@@ -1,20 +1,20 @@
 @if (dashboard) {
-  <main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2">
+  <main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 lg:grid lg:grid-cols-3 lg:gap-4">
     <!-- KARTA LACZNY MAJATEK -->
-    <div class="bg-surface-card rounded-2xl p-5 text-sm text-white">
+    <div class="bg-surface-card rounded-2xl p-5 text-sm text-white lg:col-span-2">
       <p class="text-zinc-400">Łączny majątek</p>
       <p class="text-2xl font-bold">{{ dashboard.wealthSummary.totalNetWorth }} zł</p>
       <p><span class="text-money-green">+3 500 zł</span> od kwietnia 2026</p>
     </div>
 
     <!-- KARTA MIESIECZNY BILANS -->
-    <div class="bg-surface-card rounded-2xl p-5 text-white">
+    <div class="bg-surface-card rounded-2xl p-5 text-white lg:col-span-1">
       <p class="text-sm text-zinc-400">Miesięczny bilans</p>
       <span class="text-2xl font-bold text-money-green"
         >+{{ dashboard.transactionSummary.transactionBalance }}</span
       >
       <div class="flex flex-col gap-2">
-        <div class="bg-surface-elevated rounded-2xl px-4 py-2 flex justify-between">
+        <div class="bg-surface-elevated rounded-2xl px-4 py-2 mt-2 flex justify-between">
           <p class="text-zinc-400">Przychody</p>
           <p class="text-money-green font-bold">+{{ dashboard.transactionSummary.totalIncome }}</p>
         </div>
@@ -26,21 +26,111 @@
     </div>
 
     <!-- KARTA LISTA KONT -->
-    <div class="bg-surface-card rounded-2xl p-5 text-white">
+    <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-1">
+      <div class="flex justify-between">
+        <p class="text-zinc-400">Konta</p>
+        <p class="text-brand-purple">Zarządzaj</p>
+      </div>
       @for (account of dashboard.wealthSummary.accounts; track account.id) {
-        <div class="flex justify-between">
-          <div>
-            <p>{{ account.name }}</p>
-            <p>{{ account.type }}</p>
+        <div class="flex justify-between items-center border border-zinc-600 rounded-2xl p-2 mt-2">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-money-green"></div>
+            <div>
+              <p class="font-medium">{{ account.name }}</p>
+              <p class="text-xs text-zinc-400">{{ account.type }}</p>
+            </div>
           </div>
-
           <p>{{ account.balance }} zł</p>
         </div>
       }
     </div>
 
-    <button (click)="onLogout()" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
+    <!-- KARTA OSTATNIE TRANSAKCJE -->
+    <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-3">
+      <div class="flex justify-between">
+        <p class="text-zinc-400">Ostatnie transakcje</p>
+        <p class="text-brand-purple">Zobacz wszystkie</p>
+      </div>
+
+      <div class="flex flex-col divide-y divide-zinc-700">
+        @for (transaction of dashboard.recentTransactions; track transaction.id) {
+          <div class="flex justify-between items-center py-2 mt-2">
+            <div class="flex gap-4">
+              <div
+                class="w-10 h-10 rounded-xl bg-surface-elevated flex items-center justify-center"
+              >
+                <span class="text-zinc-400">{{ transaction.categoryName[0] }}</span>
+              </div>
+              <div>
+                <p>{{ transaction.note }}</p>
+                <div class="flex gap-2 text-zinc-400 text-sm">
+                  <p>{{ transaction.transactionDate }} -</p>
+                  <p>{{ transaction.categoryName }}</p>
+                </div>
+              </div>
+            </div>
+
+            <p
+              [ngClass]="{
+                'text-money-green': transaction.type === 'INCOME',
+                'text-money-red': transaction.type === 'EXPENSE',
+                'text-money-blue': transaction.type === 'TRANSFER',
+              }"
+            >
+              {{ getAmountPrefix(transaction.type) }}{{ transaction.amount }} zł
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- KARTA WYDATKI WG KATEGORII -->
+    <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-2">
+      <div class="flex justify-between items-center">
+        <p class="text-zinc-400">Wydatki wg kategorii</p>
+        <p class="text-brand-purple">Szczegóły</p>
+      </div>
+
+      <div class="mt-4 flex flex-col gap-3">
+        @for (expense of dashboard.expenseBreakdown; track expense.categoryName) {
+          <div class="flex items-center gap-3 w-full">
+            <!-- kropka -->
+            <div class="w-3 h-3 rounded-full bg-money-red flex-shrink-0"></div>
+
+            <!-- nazwa + pasek -->
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium truncate">
+                {{ expense.categoryName }}
+              </p>
+
+              <div class="w-full bg-zinc-700 rounded-full h-1.5 mt-1 overflow-hidden">
+                <div
+                  class="bg-money-red h-1.5 rounded-full"
+                  [style.width.%]="expense.percentage"
+                ></div>
+              </div>
+            </div>
+
+            <!-- procent -->
+            <p class="w-10 text-right text-sm flex-shrink-0">{{ expense.percentage }}%</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- KARTA WSKAZÓWKI -->
+    <div class="bg-surface-card rounded-2xl p-5 text-white lg:col-span-2 lg:order-4">
+      <p class="font-medium">Wskazówka</p>
+      <p class="text-sm">Twoje wydatki na jedzenie są o 15% niższe niż w poprzednim miesiącu.</p>
+    </div>
+
+    <!-- KARTA SZYBKIE AKCJE -->
+    <div class="lg:bg-surface-card lg:rounded-2xl lg:p-5 lg:text-white lg:order-5">
+      <p class="font-medium">SZYBKIE AKCJE</p>
+    </div>
+
+    <!-- <button (click)="onLogout()" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
       Logout
-    </button>
+    </button> -->
   </main>
 }

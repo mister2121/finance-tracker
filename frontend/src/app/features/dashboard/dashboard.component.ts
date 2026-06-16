@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { Dashboard } from '../../core/models/dashboard.model';
 import { CommonModule } from '@angular/common';
+import { TransactionType } from '../../core/models/transaction.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,5 +38,11 @@ export class DashboardComponent implements OnInit {
   onLogout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  getAmountPrefix(type: TransactionType): string {
+    if (type === TransactionType.INCOME) return '+';
+    if (type === TransactionType.EXPENSE) return '-';
+    return '';
   }
 }

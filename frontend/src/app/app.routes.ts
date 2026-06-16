@@ -6,16 +6,20 @@ import { authGuard } from './core/guards/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { TransactionsComponent } from './features/transactions/transactions.component';
 import { AccountsComponent } from './features/accounts/accounts.component';
+import { MainLayoutComponent } from './shared/components/layout/mainlayout.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'accounts', component: AccountsComponent, canActivate: [authGuard] },
-  { path: 'transactions', component: TransactionsComponent, canActivate: [authGuard] },
-
-  { path: '**', redirectTo: 'dashboard' },
+  {
+    path: '',
+    component: MainLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'accounts', component: AccountsComponent },
+      { path: 'transactions', component: TransactionsComponent },
+    ],
+  },
 ];
