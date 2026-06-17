@@ -1,12 +1,140 @@
-<form (ngSubmit)="onSubmit()">
-  <p>First name:</p>
-  <input type="text" name="firstName" [(ngModel)]="firstName" />
-  <p>Last name:</p>
-  <input type="text" name="lastName" [(ngModel)]="lastName" />
-  <p>Email:</p>
-  <input type="email" name="email" [(ngModel)]="email" />
-  <p>Password:</p>
-  <input type="password" name="password" [(ngModel)]="password" /><br />
-  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Register</button>
-</form>
-<a routerLink="/login">Back to login</a>
+<div class="bg-surface-bg min-h-screen flex items-center justify-center text-white p-4">
+  <form
+    (ngSubmit)="onSubmit()"
+    class="flex flex-col gap-4 bg-surface-card rounded-2xl p-8 w-full max-w-md"
+  >
+    <!-- LOGO + TYTUŁ -->
+    <div class="flex flex-col items-center gap-1 mb-2">
+      <p class="font-bold text-xl">Finance Tracker</p>
+      <p class="text-2xl font-bold">Utwórz konto</p>
+      <p class="text-zinc-400 text-sm text-center">
+        Zarejestruj się i przejmij kontrolę nad swoimi finansami.
+      </p>
+    </div>
+
+    <!-- NAGŁÓWEK FORMULARZA -->
+    <div>
+      <p class="text-lg font-semibold">Zarejestruj się</p>
+      <div class="flex gap-1 text-sm text-zinc-400">
+        <p>Masz już konto?</p>
+        <a
+          routerLink="/login"
+          class="text-brand-purple hover:text-violet-400 transition-colors cursor-pointer"
+          >Zaloguj się</a
+        >
+      </div>
+    </div>
+
+    <!-- IMIE -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-zinc-400">Imię</label>
+      <input
+        type="text"
+        name="firstName"
+        [(ngModel)]="firstName"
+        placeholder="Wpisz imię"
+        class="w-full bg-surface-elevated rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple"
+      />
+      @if (firstNameError) {
+        <p class="text-money-red text-xs">{{ firstNameError }}</p>
+      }
+    </div>
+
+    <!-- NAZWISKO -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-zinc-400">Nazwisko</label>
+      <input
+        type="text"
+        name="lastName"
+        [(ngModel)]="lastName"
+        placeholder="Wpisz nazwisko"
+        class="w-full bg-surface-elevated rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple"
+      />
+      @if (lastNameError) {
+        <p class="text-money-red text-xs">{{ lastNameError }}</p>
+      }
+    </div>
+
+    <!-- EMAIL -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-zinc-400">Email</label>
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        (ngModelChange)="clearEmailError()"
+        placeholder="Wpisz swój email"
+        class="w-full bg-surface-elevated rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple"
+      />
+      @if (emailError) {
+        <p class="text-money-red text-xs">{{ emailError }}</p>
+      }
+    </div>
+
+    <!-- HASŁO -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-zinc-400">Hasło</label>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        placeholder="Utwórz hasło"
+        class="w-full bg-surface-elevated rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple"
+      />
+      @if (passwordError) {
+        <p class="text-money-red text-xs">{{ passwordError }}</p>
+      }
+    </div>
+
+    <!-- POTWIERDZ HASŁO -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-zinc-400">Powtórz hasło</label>
+      <input
+        type="password"
+        name="confirmPassword"
+        [(ngModel)]="confirmPassword"
+        placeholder="Powtórz hasło"
+        class="w-full bg-surface-elevated rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple"
+      />
+      @if (confirmPasswordError) {
+        <p class="text-money-red text-xs">{{ confirmPasswordError }}</p>
+      }
+    </div>
+
+    <!-- ZAPAMIĘTAJ + ZAPOMNIAŁEŚ -->
+    <div class="flex flex-col gap-1 text-sm">
+      <label class="flex items-center gap-3 text-zinc-400 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          name="acceptTerms"
+          [(ngModel)]="acceptTerms"
+          (ngModelChange)="clearTermsError()"
+          class="sr-only peer"
+        />
+
+        <span
+          class="w-5 h-5 rounded-md border border-zinc-600 bg-surface-elevated flex items-center justify-center peer-checked:bg-brand-purple peer-checked:border-brand-purple peer-focus-visible:ring-2 peer-focus-visible:ring-brand-purple/60 transition-all"
+        >
+          @if (acceptTerms) {
+            <span class="text-white text-xs font-bold">✓</span>
+          }
+        </span>
+
+        <span>Akceptuję regulamin</span>
+      </label>
+
+      @if (termsError) {
+        <p class="text-money-red text-xs">{{ termsError }}</p>
+      }
+    </div>
+
+    <!-- PRZYCISK -->
+    <button
+      type="submit"
+      [disabled]="isSubmitting"
+      class="bg-brand-purple hover:bg-violet-700 active:bg-violet-800 transition-colors w-full py-3 rounded-xl font-medium mt-2"
+    >
+      {{ isSubmitting ? 'Tworzenie konta...' : 'Utwórz konto' }}
+    </button>
+  </form>
+</div>

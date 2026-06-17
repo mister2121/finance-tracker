@@ -30,5 +30,46 @@
     <button class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium">
       + Dodaj transakcje
     </button>
+    <div class="relative">
+      <!-- AVATAR -->
+      <button
+        type="button"
+        (click)="toggleUserMenu()"
+        class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-purple to-violet-600 flex items-center justify-center text-white font-bold"
+      >
+        {{ userInitials }}
+      </button>
+
+      <!-- DROPDOWN -->
+      @if (isUserMenuOpen) {
+        <div
+          class="absolute right-0 mt-3 w-48 rounded-2xl border border-zinc-700 bg-surface-card p-2 shadow-xl z-50"
+        >
+          <button
+            type="button"
+            class="w-full text-left px-4 py-2 rounded-xl text-sm text-zinc-300 hover:bg-surface-elevated hover:text-white"
+          >
+            Profil
+          </button>
+
+          <button
+            type="button"
+            class="w-full text-left px-4 py-2 rounded-xl text-sm text-zinc-300 hover:bg-surface-elevated hover:text-white"
+          >
+            Ustawienia
+          </button>
+
+          <div class="my-2 border-t border-zinc-700"></div>
+
+          <button
+            type="button"
+            (click)="onLogout()"
+            class="w-full text-left px-4 py-2 rounded-xl text-sm text-money-red hover:bg-surface-elevated"
+          >
+            Wyloguj
+          </button>
+        </div>
+      }
+    </div>
   </div>
 </nav>

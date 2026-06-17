@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { LoginRequest } from '../../../core/models/auth.model';
@@ -13,12 +13,58 @@ import { RouterLink } from '@angular/router';
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   email: string = '';
   password: string = '';
-  errorMessage: string = '';
+
+  emailError: string = '';
+  passwordError: string = '';
+  loginError: string = '';
+
+  rememberMe: boolean = false;
+
+  // czy pola są puste?
+  validateForm(): boolean {
+    this.emailError = '';
+    this.passwordError = '';
+    this.loginError = '';
+
+    let isValid = true;
+
+    if (!this.email.trim()) {
+      this.emailError = 'Email jest wymagany';
+      isValid = false;
+    } else if (!this.isEmailValid()) {
+      this.emailError = 'Podaj poprawny adres email';
+      isValid = false;
+    }
+
+    if (!this.password.trim()) {
+      this.passwordError = 'Hasło jest wymagane';
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  // czy email jest poprawny?
+  isEmailValid(): boolean {
+    return this.email.includes('@') && this.email.includes('.');
+  }
+
+  clearLoginError() {
+    this.loginError = '';
+  }
 
   onSubmit() {
+    const formValid = this.validateForm();
+
+    if (!formValid) {
+      this.cdr.detectChanges();
+      return;
+    }
+
     const request: LoginRequest = {
       email: this.email,
       password: this.password,
@@ -29,7 +75,8 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: () => {
-        alert('Login failed. Please check your credentials and try again.');
+        this.loginError = 'Nieprawidłowy email lub hasło';
+        this.cdr.detectChanges();
       },
     });
   }

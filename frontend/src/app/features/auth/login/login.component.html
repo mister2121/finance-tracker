@@ -1,8 +1,90 @@
-<form (ngSubmit)="onSubmit()">
-  <p>Email:</p>
-  <input type="email" name="email" [(ngModel)]="email" />
-  <p>Password:</p>
-  <input type="password" name="password" [(ngModel)]="password" /><br />
-  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
-</form>
-<a routerLink="/register">Sign up here</a>
+<div class="bg-surface-bg min-h-screen flex items-center justify-center text-white p-4">
+  <form
+    (ngSubmit)="onSubmit()"
+    class="flex flex-col gap-4 bg-surface-card rounded-2xl p-8 w-full max-w-md"
+  >
+    <!-- LOGO + TYTUŁ -->
+    <div class="flex flex-col items-center gap-1 mb-2">
+      <p class="font-bold text-xl">Finance Tracker</p>
+      <p class="text-2xl font-bold">Witaj ponownie!</p>
+      <p class="text-zinc-400 text-sm text-center">Zaloguj się, aby zarządzać swoimi finansami.</p>
+    </div>
+
+    <!-- NAGŁÓWEK FORMULARZA -->
+    <div>
+      <p class="text-lg font-semibold">Zaloguj się</p>
+      <div class="flex gap-1 text-sm text-zinc-400">
+        <p>Nie masz konta?</p>
+        <a
+          routerLink="/register"
+          class="text-brand-purple hover:text-violet-400 transition-colors cursor-pointer"
+          >Zarejestruj się</a
+        >
+      </div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-zinc-400">Email</label>
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        (ngModelChange)="clearLoginError()"
+        placeholder="Wpisz swój email"
+        class="w-full bg-surface-elevated rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple"
+      />
+      @if (emailError) {
+        <p class="text-money-red text-xs">{{ emailError }}</p>
+      }
+    </div>
+
+    <!-- HASŁO -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-zinc-400">Hasło</label>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        (ngModelChange)="clearLoginError()"
+        placeholder="Wpisz swoje hasło"
+        class="w-full bg-surface-elevated rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple"
+      />
+      @if (passwordError) {
+        <p class="text-money-red text-xs">{{ passwordError }}</p>
+      }
+    </div>
+
+    <!-- ZAPAMIĘTAJ + ZAPOMNIAŁEŚ -->
+    <div class="flex items-center justify-between text-sm">
+      <label class="flex items-center gap-3 text-zinc-400 cursor-pointer select-none">
+        <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" class="sr-only peer" />
+
+        <span
+          class="w-5 h-5 rounded-md border border-zinc-600 bg-surface-elevated flex items-center justify-center peer-checked:bg-brand-purple peer-checked:border-brand-purple peer-focus-visible:ring-2 peer-focus-visible:ring-brand-purple/60 transition-all"
+        >
+          @if (rememberMe) {
+            <span class="text-white text-xs font-bold">✓</span>
+          }
+        </span>
+
+        <span>Zapamiętaj mnie</span>
+      </label>
+
+      <a class="text-brand-purple hover:text-violet-400 transition-colors cursor-pointer">
+        Zapomniałeś hasła?
+      </a>
+    </div>
+
+    <!-- PRZYCISK -->
+    @if (loginError) {
+      <p class="text-money-red text-sm text-center">{{ loginError }}</p>
+    }
+    <button
+      type="submit"
+      class="bg-brand-purple hover:bg-violet-700 active:bg-violet-800 transition-colors w-full py-3 rounded-xl font-medium mt-2"
+    >
+      Zaloguj się
+    </button>
+  </form>
+</div>

@@ -8,9 +8,14 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(request: LoginRequest) {
-    return this.http
-      .post<AuthResponse>('http://localhost:8080/api/auth/login', request)
-      .pipe(tap((response) => localStorage.setItem('token', response.token)));
+    return this.http.post<AuthResponse>('http://localhost:8080/api/auth/login', request).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('email', response.email);
+        localStorage.setItem('firstName', response.firstName);
+        localStorage.setItem('lastName', response.lastName);
+      }),
+    );
   }
 
   register(request: RegisterRequest) {
@@ -19,9 +24,22 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
   }
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
+  }
+
+  getUserInitials(): string {
+    const firstName = localStorage.getItem('firstName') || '';
+    const lastName = localStorage.getItem('lastName') || '';
+
+    const firstInitial = firstName.charAt(0).toUpperCase();
+    const lastInitial = lastName.charAt(0).toUpperCase();
+
+    return `${firstInitial}${lastInitial}`;
   }
 }
