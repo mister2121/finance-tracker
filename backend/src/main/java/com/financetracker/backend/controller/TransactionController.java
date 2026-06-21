@@ -1,8 +1,11 @@
 package com.financetracker.backend.controller;
 
-import java.util.List;
 import java.util.UUID;
 
+
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.financetracker.backend.dto.request.TransactionRequest;
+import com.financetracker.backend.dto.response.PagedResponse;
 import com.financetracker.backend.dto.response.TransactionResponse;
 import com.financetracker.backend.service.TransactionService;
 
@@ -27,10 +32,10 @@ public class TransactionController {
   
   private final TransactionService transactionService;
 
-  @GetMapping
-  public ResponseEntity<List<TransactionResponse>> getAllTransactions() {
-    return ResponseEntity.ok(transactionService.getAllUserTransactions());
-  }
+  // @GetMapping
+  // public ResponseEntity<List<TransactionResponse>> getAllTransactions() {
+  //   return ResponseEntity.ok(transactionService.getAllUserTransactions());
+  // }
 
   @GetMapping("/{id}")
   public ResponseEntity<TransactionResponse> getTransactionById(@PathVariable UUID id) {
@@ -47,4 +52,12 @@ public class TransactionController {
     transactionService.deleteTransaction(id);
     return ResponseEntity.noContent().build();
   }
+
+  @GetMapping
+  public ResponseEntity<PagedResponse<TransactionResponse>> getTransactions(
+    @RequestParam int year,
+    @RequestParam int month,
+    @PageableDefault(size = 20, sort = "transactionDate", direction = Sort.Direction.DESC) Pageable pageable) {
+      return ResponseEntity.ok(transactionService.getTransactionsForMonth(year, month, pageable));
+    }
 }

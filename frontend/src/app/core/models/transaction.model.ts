@@ -14,3 +14,24 @@ export interface RecentTransaction {
   accountName: string;
   toAccountName: string;
 }
+
+export interface PagedResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface TransactionResponse {
+  id: string;
+  accountName: string;
+  toAccountName: string | null;
+  amount: number;
+  type: TransactionType;
+  categoryName: string | null;
+  note: string;
+  transactionDate: string;
+  createdAt: string;
+  updatedAt: string;
+}

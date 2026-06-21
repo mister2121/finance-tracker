@@ -1,4 +1,59 @@
-<!-- mobile  -->
+<!-- MOBILE TOP BAR -->
+<nav
+  class="flex justify-between items-center px-4 py-3 fixed top-0 left-0 right-0 bg-surface-card lg:hidden z-40"
+>
+  <!-- LEWO: logo -->
+  <div class="text-zinc-200 font-bold">Finance Tracker</div>
+
+  <!-- PRAWO: miesiąc + avatar -->
+  <div class="flex items-center gap-3">
+    <span class="text-sm text-zinc-400">{{ currentMonth }}</span>
+
+    <div class="relative">
+      <!-- AVATAR -->
+      <button
+        type="button"
+        (click)="toggleUserMenu()"
+        class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-purple to-violet-600 flex items-center justify-center text-white font-bold"
+      >
+        {{ userInitials }}
+      </button>
+
+      <!-- DROPDOWN -->
+      @if (isUserMenuOpen) {
+        <div
+          class="absolute right-0 mt-3 w-48 rounded-2xl border border-zinc-700 bg-surface-card p-2 shadow-xl z-50"
+        >
+          <button
+            type="button"
+            class="w-full text-left px-4 py-2 rounded-xl text-sm text-zinc-300 hover:bg-surface-elevated hover:text-white"
+          >
+            Profil
+          </button>
+
+          <button
+            type="button"
+            class="w-full text-left px-4 py-2 rounded-xl text-sm text-zinc-300 hover:bg-surface-elevated hover:text-white"
+          >
+            Ustawienia
+          </button>
+
+          <div class="my-2 border-t border-zinc-700"></div>
+
+          <button
+            type="button"
+            (click)="onLogout()"
+            class="w-full text-left px-4 py-2 rounded-xl text-sm text-money-red hover:bg-surface-elevated"
+          >
+            Wyloguj
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</nav>
+
+<!-- mobile bottom bar -->
 <nav
   class="flex justify-around fixed bottom-0 left-0 right-0 bg-surface-card text-zinc-400 lg:hidden"
 >

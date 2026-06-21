@@ -2,14 +2,20 @@ package com.financetracker.backend.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.financetracker.backend.dto.request.TransactionRequest;
+import com.financetracker.backend.dto.response.PagedResponse;
 import com.financetracker.backend.dto.response.TransactionResponse;
 import com.financetracker.backend.dto.response.dashboard.ExpenseBreakdownResponse;
 import com.financetracker.backend.dto.response.dashboard.RecentTransactionResponse;
@@ -187,6 +193,27 @@ public class TransactionService {
         ))
         .toList();
   }
+
+
+  // 6. PAGINACJA W TRANSAKCJI W ZAKLADCE "TRANSAKCJE"
+  public PagedResponse<TransactionResponse> getTransactionsForMonth(int year, int month, Pageable pageable) {
+    User user = getAuthenticatedUser();
+    LocalDate start = LocalDate.of(year, month, 1);
+    LocalDate end = start.with(TemporalAdjusters.lastDayOfMonth());
+
+    Page<Transaction> transactions = transactionRepository.findByUserAndDateRange(user.getId(), start, end, pageable);
+
+    Page<TransactionResponse> page = transactions.map(this::mapToResponse);
+
+    return new PagedResponse<>(
+      page.getContent(),
+      page.getNumber(),
+      page.getSize(),
+      page.getTotalElements(),
+      page.getTotalPages()
+    );
+  }
+
 
   private TransactionResponse mapToResponse(Transaction transaction) {
     return new TransactionResponse(
