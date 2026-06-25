@@ -82,7 +82,10 @@
   <!-- PRAWO AKCJE  -->
   <div class="flex gap-4">
     <span class="px-4 py-2 rounded-xl">{{ currentMonth }}</span>
-    <button class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium">
+    <button
+      (click)="modalService.open()"
+      class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium"
+    >
       + Dodaj transakcje
     </button>
     <div class="relative">

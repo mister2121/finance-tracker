@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { Dashboard } from '../../core/models/dashboard.model';
 import { CommonModule } from '@angular/common';
 import { TransactionType } from '../../core/models/transaction.model';
+import { ModalService } from '../../core/services/modal.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,21 +14,35 @@ import { TransactionType } from '../../core/models/transaction.model';
 })
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
+  private modalService = inject(ModalService);
   private router = inject(Router);
   private dashboardService = inject(DashboardService);
   private cdr = inject(ChangeDetectorRef); // i dont know why but this is necessary
 
   dashboard: Dashboard | null = null;
 
+  constructor() {
+    effect(() => {
+      const saved = this.modalService.transactionSaved();
+      if (saved > 0) {
+        this.loadDashboard();
+      }
+    });
+  }
+
   ngOnInit() {
+    this.loadDashboard();
+  }
+
+  loadDashboard() {
     const now = new Date();
     const year = now.getFullYear();
-    const month = now.getMonth() + 1; // JavaScript months are 0-based
+    const month = now.getMonth() + 1;
 
     this.dashboardService.getDashboard(year, month).subscribe({
       next: (dashboard) => {
         this.dashboard = dashboard;
-        this.cdr.detectChanges(); // i dont know why but this is necessary
+        this.cdr.detectChanges();
       },
       error: () => {
         alert('Failed to load dashboard data. Please try again later.');

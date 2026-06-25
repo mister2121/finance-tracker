@@ -1,4 +1,11 @@
 <app-navbar></app-navbar>
 <div class="pt-14 bg-[#02060f] min-h-screen">
   <router-outlet></router-outlet>
+
+  @if (modalService.isAddTransactionOpen()) {
+    <app-add-transaction-modal
+      [transactionToEdit]="modalService.transactionToEdit()"
+      (closed)="modalService.close()"
+    />
+  }
 </div>

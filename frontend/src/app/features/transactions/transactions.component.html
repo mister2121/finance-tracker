@@ -1,4 +1,8 @@
 @if (transactions) {
+  @if (isModalOpen) {
+    <app-add-transaction-modal (closed)="isModalOpen = false" />
+  }
+
   <main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 text-white">
     <div class="flex flex-row justify-between">
       <div>
@@ -142,6 +146,7 @@
         @for (t of transactions.content; track t.id) {
           <button
             type="button"
+            (click)="openActionSheet(t)"
             class="w-full flex items-center gap-3 p-3 text-left transition-colors active:bg-surface-elevated/60"
           >
             <!-- IKONA -->
@@ -184,6 +189,35 @@
           </button>
         }
       </div>
+      @if (selectedTransaction) {
+        <!-- OVERLAY -->
+        <div class="fixed inset-0 z-50 bg-black/60 lg:hidden" (click)="closeActionSheet()">
+          <!-- SHEET -->
+          <div
+            class="absolute bottom-0 left-0 right-0 bg-surface-card rounded-t-2xl p-4"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="w-10 h-1 bg-zinc-600 rounded-full mx-auto mb-4"></div>
+            <p class="font-semibold text-white mb-1">{{ selectedTransaction.note }}</p>
+            <p class="text-sm text-zinc-400 mb-4">
+              {{ selectedTransaction.amount | currency: 'PLN' : 'symbol' : '1.2-2' : 'pl-PL' }}
+            </p>
+
+            <button
+              (click)="modalService.openForEdit(selectedTransaction); closeActionSheet()"
+              class="w-full py-3 rounded-xl border border-zinc-700 text-white mb-2"
+            >
+              Edytuj
+            </button>
+            <button
+              (click)="deleteTransaction(selectedTransaction.id); closeActionSheet()"
+              class="w-full py-3 rounded-xl bg-money-red/15 text-money-red"
+            >
+              Usuń
+            </button>
+          </div>
+        </div>
+      }
     </section>
 
     <!-- DESKTOP  -->
@@ -344,6 +378,7 @@
                   <td class="py-4 pl-4">
                     <div class="flex items-center justify-end gap-2">
                       <button
+                        (click)="openEditModal(t)"
                         type="button"
                         class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-surface-elevated"
                       >
@@ -363,6 +398,7 @@
                         </svg>
                       </button>
                       <button
+                        (click)="deleteTransaction(t.id)"
                         type="button"
                         class="p-2 rounded-lg text-zinc-400 hover:text-money-red hover:bg-surface-elevated"
                       >

@@ -23,6 +23,16 @@ export interface PagedResponse<T> {
   totalPages: number;
 }
 
+export interface TransactionRequest {
+  accountId: string;
+  toAccountId?: string;
+  categoryId?: string;
+  type: TransactionType;
+  amount: number;
+  transactionDate: string;
+  note?: string;
+}
+
 export interface TransactionResponse {
   id: string;
   accountName: string;

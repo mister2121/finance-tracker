@@ -3,6 +3,7 @@ import { Component, ElementRef, HostListener, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { filter } from 'rxjs';
+import { ModalService } from '../../../core/services/modal.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,7 @@ export class NavbarComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private elementRef = inject(ElementRef);
+  modalService = inject(ModalService);
 
   userInitials = this.authService.getUserInitials();
   currentMonth = new Date().toLocaleString('pl-PL', { month: 'long', year: 'numeric' });

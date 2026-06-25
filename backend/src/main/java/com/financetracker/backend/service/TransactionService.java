@@ -3,7 +3,6 @@ package com.financetracker.backend.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.UUID;
@@ -152,7 +151,38 @@ public class TransactionService {
 
     transactionRepository.delete(transaction);
   }
-  // 5. DODATKOWE METODY DO DASHBOARDU - SUMA WYDATKÓW, PRZYCHODÓW, PODZIAŁ WYDATKÓW NA KATEGORIE, OSTATNIE TRANSAKCJE
+
+  // 5. EDYCJA TRANSAKCJI
+  public TransactionResponse editTransaction(UUID id, TransactionRequest request) {
+    User user = getAuthenticatedUser();
+    Transaction transaction = transactionRepository.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+
+    if (!transaction.getUser().getId().equals(user.getId())) {
+      throw new UnauthorizedException("No access to this transaction");
+    }
+
+    Account account = accountRepository.findById(request.getAccountId())
+    .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+    Category category = request.getCategoryId() != null 
+      ? categoryRepository.findById(request.getCategoryId())
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found"))
+      : null;
+
+    transaction.setUser(user);
+    transaction.setAccount(account);
+    transaction.setCategory(category);
+    transaction.setType(request.getType());
+    transaction.setAmount(request.getAmount());
+    transaction.setTransactionDate(request.getTransactionDate());
+    transaction.setNote(request.getNote());
+    
+    Transaction savedTransaction = transactionRepository.saveAndFlush(transaction);
+    return mapToResponse(savedTransaction);
+  }
+
+  // 6. DODATKOWE METODY DO DASHBOARDU - SUMA WYDATKÓW, PRZYCHODÓW, PODZIAŁ WYDATKÓW NA KATEGORIE, OSTATNIE TRANSAKCJE
   public BigDecimal getTotalExpensesForMonth(UUID userId, int year, int month) {
     BigDecimal result = transactionRepository.findTotalAmountByTypeAndMonth(userId, TransactionType.EXPENSE, month, year);
     return result != null ? result : BigDecimal.ZERO;
@@ -195,7 +225,7 @@ public class TransactionService {
   }
 
 
-  // 6. PAGINACJA W TRANSAKCJI W ZAKLADCE "TRANSAKCJE"
+  // 7. PAGINACJA W TRANSAKCJI W ZAKLADCE "TRANSAKCJE"
   public PagedResponse<TransactionResponse> getTransactionsForMonth(int year, int month, Pageable pageable) {
     User user = getAuthenticatedUser();
     LocalDate start = LocalDate.of(year, month, 1);

@@ -1,0 +1,166 @@
+<!-- OVERLAY -->
+<div
+  class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:flex lg:items-center lg:justify-center lg:p-6"
+  (click)="closed.emit()"
+>
+  <!-- KARTA MODALA -->
+  <div
+    class="h-full w-full overflow-y-auto bg-surface-card lg:h-auto lg:max-h-[90vh] lg:w-[560px] lg:rounded-2xl lg:border lg:border-zinc-700 lg:shadow-2xl"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="text-white">
+      <div
+        class="flex items-center gap-4 border-b border-zinc-800 bg-surface-card px-4 py-4 lg:px-6"
+      >
+        <button
+          class="w-11 h-11 shrink-0 rounded-xl border border-zinc-700 bg-surface-elevated text-xl text-zinc-400 transition-colors hover:border-zinc-600 hover:text-white active:bg-zinc-800"
+          (click)="closed.emit()"
+        >
+          X
+        </button>
+        <div>
+          <p class="text-xl font-bold lg:text-2xl">
+            {{ transactionToEdit ? 'Edytuj transakcję' : 'Dodaj transakcję' }}
+          </p>
+          <p class="mt-1 text-sm text-zinc-400">
+            {{ transactionToEdit ? 'Zmień dane transakcji' : 'Uzupełnij dane nowej transakcji' }}
+          </p>
+        </div>
+      </div>
+      <div
+        class="mx-4 mt-4 grid grid-cols-3 overflow-hidden rounded-xl border border-zinc-700 bg-surface-elevated lg:mx-6"
+      >
+        <button
+          (click)="selectedType = TransactionType.EXPENSE"
+          [disabled]="!!transactionToEdit"
+          class="px-2 py-3 text-sm font-medium transition-colors lg:py-4"
+          [ngClass]="
+            transactionToEdit
+              ? selectedType === TransactionType.EXPENSE
+                ? setColorBasedOnType(TransactionType.EXPENSE)
+                : 'text-zinc-600 cursor-not-allowed'
+              : setColorBasedOnType(TransactionType.EXPENSE)
+          "
+        >
+          Wydatek
+        </button>
+        <button
+          (click)="selectedType = TransactionType.INCOME"
+          [disabled]="!!transactionToEdit"
+          class="border-x border-zinc-700 px-2 py-3 text-sm font-medium transition-colors lg:py-4"
+          [ngClass]="
+            transactionToEdit
+              ? selectedType === TransactionType.INCOME
+                ? setColorBasedOnType(TransactionType.INCOME)
+                : 'text-zinc-600 cursor-not-allowed'
+              : setColorBasedOnType(TransactionType.INCOME)
+          "
+        >
+          Przychód
+        </button>
+        <button
+          (click)="selectedType = TransactionType.TRANSFER"
+          [disabled]="!!transactionToEdit"
+          class="px-2 py-3 text-sm font-medium transition-colors lg:py-4"
+          [ngClass]="
+            transactionToEdit
+              ? selectedType === TransactionType.TRANSFER
+                ? setColorBasedOnType(TransactionType.TRANSFER)
+                : 'text-zinc-600 cursor-not-allowed'
+              : setColorBasedOnType(TransactionType.TRANSFER)
+          "
+        >
+          Transfer
+        </button>
+      </div>
+      <form class="flex flex-1 flex-col px-4 pb-8 pt-2 lg:px-6">
+        <label class="mt-4 text-sm font-medium text-zinc-200">Kwota</label>
+        <input
+          type="number"
+          name="amount"
+          [(ngModel)]="amount"
+          class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+        />
+        <p class="mt-1 text-xs text-zinc-500">Wpisz kwotę transakcji</p>
+        @if (transactionToEdit) {
+          <p class="mt-1 text-xs text-amber-400/80">
+            ⚠️ Zmiana kwoty nie zaktualizuje automatycznie łącznego majątku konta. Aby skorygować
+            saldo, edytuj konto ręcznie, lub dodaj nową transakcję.
+          </p>
+        }
+        <label class="mt-4 text-sm font-medium text-zinc-200">Opis</label>
+        <textarea
+          [(ngModel)]="note"
+          name="note"
+          class="mt-2 min-h-24 w-full resize-none rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+        ></textarea>
+        <p class="mt-1 text-xs text-zinc-500">Krótki opis transakcji</p>
+        <label class="mt-4 text-sm font-medium text-zinc-200">Kategoria</label>
+        <select
+          [(ngModel)]="categoryId"
+          name="categoryId"
+          class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+        >
+          <option value="">Wybierz kategorię</option>
+          @for (cat of categories; track cat.id) {
+            <option [value]="cat.id">{{ cat.name }}</option>
+          }
+        </select>
+        <p class="mt-1 text-xs text-zinc-500">Wybierz odpowiednią kategorię</p>
+        <label class="mt-4 text-sm font-medium text-zinc-200">Konto</label>
+        <select
+          [(ngModel)]="accountId"
+          name="accountId"
+          class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+        >
+          <option value="">Wybierz konto</option>
+          @for (acc of accounts; track acc.id) {
+            <option [value]="acc.id">{{ acc.name }}</option>
+          }
+        </select>
+        <p class="mt-1 text-xs text-zinc-500">Konto, z którego wykonano transakcję</p>
+        <label class="mt-4 text-sm font-medium text-zinc-200">Data</label>
+        <input
+          type="date"
+          [(ngModel)]="transactionDate"
+          name="transactionDate"
+          class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+        />
+        <p class="mt-1 text-xs text-zinc-500">Data transakcji</p>
+        <label
+          class="mt-4 text-sm font-medium text-zinc-200"
+          [ngClass]="selectedType === TransactionType.TRANSFER ? 'text-zinc-200' : 'text-zinc-600'"
+          >Konto docelowe (tylko dla transferów)</label
+        >
+
+        <select
+          [(ngModel)]="toAccountId"
+          name="toAccountId"
+          [disabled]="selectedType !== TransactionType.TRANSFER"
+          class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+        >
+          <option value="">Wybierz konto docelowe</option>
+          @for (acc of accounts; track acc.id) {
+            <option [value]="acc.id">{{ acc.name }}</option>
+          }
+        </select>
+      </form>
+      <div
+        class="sticky bottom-0 z-20 grid grid-cols-2 gap-3 border-t border-zinc-800 bg-surface-card p-4 lg:px-6"
+      >
+        <button
+          (click)="closed.emit()"
+          class="rounded-xl border border-zinc-700 bg-surface-elevated py-3 font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white active:bg-zinc-800"
+        >
+          Anuluj
+        </button>
+        <button
+          (click)="onSubmit()"
+          class="rounded-xl bg-brand-purple py-3 font-medium text-white transition-colors hover:bg-violet-700 active:bg-violet-800"
+        >
+          {{ transactionToEdit ? 'Zapisz zmiany' : 'Zapisz transakcję' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
