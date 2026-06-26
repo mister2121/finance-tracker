@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, effect, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { Dashboard } from '../../core/models/dashboard.model';
 import { CommonModule } from '@angular/common';
@@ -9,12 +9,12 @@ import { ModalService } from '../../core/services/modal.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
-  private modalService = inject(ModalService);
+  modalService = inject(ModalService);
   private router = inject(Router);
   private dashboardService = inject(DashboardService);
   private cdr = inject(ChangeDetectorRef); // i dont know why but this is necessary

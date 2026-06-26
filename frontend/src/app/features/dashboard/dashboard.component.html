@@ -1,5 +1,22 @@
 @if (dashboard) {
   <main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 lg:grid lg:grid-cols-3 lg:gap-4">
+    <!-- MOBILE toggle Miesiąc/Rok i DODAJ TRANSAKCJE  -->
+    <div class="flex items-center justify-between bg-surface-elevated rounded-xl p-1 lg:hidden">
+      <div>
+        <button class="px-3 py-1.5 rounded-lg text-sm font-medium bg-surface-card text-white">
+          Miesiąc
+        </button>
+        <button class="px-3 py-1.5 rounded-lg text-sm font-medium text-zinc-400">Rok</button>
+      </div>
+
+      <button
+        (click)="modalService.open()"
+        class="bg-brand-purple text-white px-4 py-2 rounded-xl text-sm font-medium"
+      >
+        + Dodaj transakcję
+      </button>
+    </div>
+
     <!-- KARTA LACZNY MAJATEK -->
     <div class="bg-surface-card rounded-2xl p-5 text-sm text-white lg:col-span-2">
       <p class="text-zinc-400">Łączny majątek</p>
@@ -49,7 +66,7 @@
     <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-3">
       <div class="flex justify-between">
         <p class="text-zinc-400">Ostatnie transakcje</p>
-        <p class="text-brand-purple">Zobacz wszystkie</p>
+        <a routerLink="/transactions" class="text-brand-purple">Zobacz wszystkie</a>
       </div>
 
       <div class="flex flex-col divide-y divide-zinc-700">
