@@ -44,9 +44,7 @@ export class DashboardComponent implements OnInit {
         this.dashboard = dashboard;
         this.cdr.detectChanges();
       },
-      error: () => {
-        alert('Failed to load dashboard data. Please try again later.');
-      },
+      error: () => {},
     });
   }
 

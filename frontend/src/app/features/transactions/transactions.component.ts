@@ -54,7 +54,6 @@ export class TransactionsComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
-        alert('Failed to load transactions data. Please try again later.');
       },
     });
   }
