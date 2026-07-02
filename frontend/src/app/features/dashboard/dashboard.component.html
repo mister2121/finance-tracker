@@ -10,7 +10,7 @@
       </div>
 
       <button
-        (click)="modalService.open()"
+        (click)="modalService.openTransactionModal()"
         class="bg-brand-purple text-white px-4 py-2 rounded-xl text-sm font-medium"
       >
         + Dodaj transakcję
@@ -46,7 +46,7 @@
     <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-1">
       <div class="flex justify-between">
         <p class="text-zinc-400">Konta</p>
-        <p class="text-brand-purple">Zarządzaj</p>
+        <a routerLink="/accounts" class="text-brand-purple">Zarządzaj</a>
       </div>
       @for (account of dashboard.wealthSummary.accounts; track account.id) {
         <div class="flex justify-between items-center border border-zinc-600 rounded-2xl p-2 mt-2">

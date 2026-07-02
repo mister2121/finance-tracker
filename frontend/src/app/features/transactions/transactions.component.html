@@ -1,6 +1,9 @@
 @if (transactions) {
-  @if (isModalOpen) {
-    <app-add-transaction-modal (closed)="isModalOpen = false" />
+  @if (modalService.isAddTransactionOpen()) {
+    <app-add-transaction-modal
+      [transactionToEdit]="modalService.transactionToEdit()"
+      (closed)="modalService.closeTransactionModal()"
+    />
   }
 
   <main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 text-white">
@@ -144,7 +147,7 @@
       <!-- PRZYCISK DODAJ - MOBILE -->
       <button
         type="button"
-        (click)="modalService.open()"
+        (click)="modalService.openTransactionModal()"
         class="w-full flex items-center justify-center gap-2 bg-brand-purple rounded-xl py-3 text-sm font-medium text-white active:bg-violet-800"
       >
         + Dodaj transakcję
@@ -212,7 +215,7 @@
             </p>
 
             <button
-              (click)="modalService.openForEdit(selectedTransaction); closeActionSheet()"
+              (click)="modalService.openTransactionForEdit(selectedTransaction); closeActionSheet()"
               class="w-full py-3 rounded-xl border border-zinc-700 text-white mb-2"
             >
               Edytuj

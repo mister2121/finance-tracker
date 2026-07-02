@@ -1,1 +1,189 @@
-<p>Accounts page</p>
+@if (modalService.isAddAccountOpen()) {
+  <app-add-account-modal [accountToEdit]="modalService.accountToEdit()" />
+}
+
+<main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 text-white">
+  <div>
+    <h1 class="text-2xl font-bold">Konta</h1>
+    <p class="text-sm text-zinc-400">Zarządzaj swoimi kontami finansowymi.</p>
+  </div>
+  <!-- MOBILE  -->
+  <section class="bg-surface-bg min-h-screen flex flex-col gap-2 text-white lg:hidden">
+    <button
+      type="button"
+      (click)="modalService.openAccountModal()"
+      class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium"
+    >
+      + Dodaj konto
+    </button>
+    @for (a of accounts; track a.id) {
+      <button
+        type="button"
+        (click)="openActionSheet(a)"
+        class="bg-surface-card rounded-2xl p-5 text-white"
+      >
+        <div class="flex justify-between items-center">
+          <div class="flex gap-2 items-center">
+            <div
+              class="w-10 h-10 rounded-xl bg-brand-purple/30 flex items-center justify-center shrink-0"
+            >
+              <span class="font-semibold">
+                {{ a.name.charAt(0) }}
+              </span>
+            </div>
+            <div class="min-w-0 text-left">
+              <p class="text-xl font-bold">{{ a.name }}</p>
+              <p class="text-sm text-zinc-400">{{ getAccountTypeLabel(a.type) }}</p>
+            </div>
+          </div>
+          <div class="flex gap-2 items-center">
+            <p class="font-semibold text-sm">
+              {{ a.balance | currency: a.currency : 'code' : '1.2-2' : 'pl-PL' }}
+            </p>
+            <span class="text-zinc-500 text-xl">›</span>
+          </div>
+        </div>
+        <p class="mt-1 text-xs text-zinc-500 text-left">
+          Ostatnia aktualizacja: {{ a.updatedAt | date: 'dd.MM.yyyy HH:mm' }}
+        </p>
+      </button>
+    }
+    @if (selectedAccount) {
+      <div class="fixed inset-0 z-50 bg-black/60 lg:hidden" (click)="closeActionSheet()">
+        <div
+          class="absolute bottom-0 left-0 right-0 rounded-t-2xl bg-surface-card p-4"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-zinc-600"></div>
+
+          <p class="mb-1 font-semibold text-white">
+            {{ selectedAccount.name }}
+          </p>
+
+          <p class="mb-4 text-sm text-zinc-400">
+            {{
+              selectedAccount.balance
+                | currency: selectedAccount.currency : 'code' : '1.2-2' : 'pl-PL'
+            }}
+          </p>
+
+          <button
+            type="button"
+            (click)="openEditModal(selectedAccount)"
+            class="mb-2 w-full rounded-xl border border-zinc-700 py-3 text-white"
+          >
+            Edytuj
+          </button>
+
+          <button
+            type="button"
+            (click)="deleteAccount(selectedAccount.id)"
+            class="w-full rounded-xl bg-money-red/15 py-3 text-money-red"
+          >
+            Usuń
+          </button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- DESKTOP -->
+  <section class="hidden lg:block text-white">
+    <div
+      class="bg-surface-card p-5 rounded-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+    >
+      @for (a of accounts; track a.id) {
+        <div class="bg-surface-elevated rounded-2xl p-5 text-white">
+          <!-- GÓRNA CZĘŚĆ KARTY -->
+          <div class="flex justify-between items-start gap-3">
+            <div class="flex gap-2 items-center min-w-0">
+              <div
+                class="w-10 h-10 rounded-xl bg-brand-purple/30 flex items-center justify-center shrink-0"
+              >
+                <span class="font-semibold">
+                  {{ a.name.charAt(0) }}
+                </span>
+              </div>
+
+              <div class="min-w-0">
+                <p class="text-xl font-bold truncate">
+                  {{ a.name }}
+                </p>
+
+                <p class="text-sm text-zinc-400 truncate">
+                  {{ getAccountTypeLabel(a.type) }}
+                </p>
+              </div>
+            </div>
+
+            <p class="font-semibold whitespace-nowrap">
+              {{ a.balance | currency: a.currency : 'code' : '1.2-2' : 'pl-PL' }}
+            </p>
+          </div>
+          <p class="mt-1 text-xs text-zinc-500">
+            Ostatnia aktualizacja: {{ a.updatedAt | date: 'dd.MM.yyyy HH:mm' }}
+          </p>
+          <!-- PRZYCISKI -->
+          <div class="flex gap-2 mt-5">
+            <!-- EDYCJA -->
+            <button
+              type="button"
+              (click)="openEditModal(a)"
+              class="flex-1 flex items-center justify-center gap-2 rounded-xl border border-zinc-700 px-3 py-2 text-sm text-zinc-300 transition-colors hover:border-zinc-600 hover:bg-surface-card hover:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.862 4.487a2.06 2.06 0 0 1 2.915 2.914L7.5 19.68l-4 1 1-4L16.862 4.487Z"
+                />
+              </svg>
+
+              <span>Edytuj</span>
+            </button>
+
+            <!-- USUWANIE -->
+            <button
+              type="button"
+              (click)="deleteAccount(a.id)"
+              class="flex-1 flex items-center justify-center gap-2 rounded-xl border border-zinc-700 px-3 py-2 text-sm text-zinc-300 transition-colors hover:border-money-red/50 hover:bg-money-red/10 hover:text-money-red"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 7h14Z"
+                />
+              </svg>
+
+              <span>Usuń</span>
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- DODAWANIE KONTA -->
+      <button
+        type="button"
+        (click)="modalService.openAccountModal()"
+        class="min-h-36 flex items-center justify-center bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium transition-colors hover:bg-violet-700"
+      >
+        + Dodaj konto
+      </button>
+    </div>
+  </section>
+</main>

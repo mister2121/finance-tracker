@@ -86,7 +86,7 @@ export class AddTransactionModal {
 
     action.subscribe({
       next: () => {
-        this.modalService.notifySaved();
+        this.modalService.notifyTransactionSaved();
         this.closed.emit();
       },
       error: (err) => console.error(err),

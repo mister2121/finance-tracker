@@ -11,4 +11,13 @@ export interface DashboardAccount {
   type: AccountType;
   currency: string;
   balance: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AccountRequest {
+  name: string;
+  type: AccountType;
+  currency: string;
+  balance: number;
 }

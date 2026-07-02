@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { TransactionService } from '../../core/services/transaction.service';
 import {
   PagedResponse,
-  TransactionRequest,
   TransactionResponse,
   TransactionType,
 } from '../../core/models/transaction.model';
@@ -24,7 +23,6 @@ export class TransactionsComponent implements OnInit {
 
   transactions: PagedResponse<TransactionResponse> | null = null;
   selectedDate = new Date();
-  isModalOpen = false;
   selectedTransaction: TransactionResponse | null = null;
 
   constructor() {
@@ -53,8 +51,7 @@ export class TransactionsComponent implements OnInit {
         this.transactions = transactions;
         this.cdr.detectChanges();
       },
-      error: () => {
-      },
+      error: () => {},
     });
   }
 
@@ -101,15 +98,8 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
-  editTransaction(id: string, request: TransactionRequest) {
-    this.transactionService.editTransaction(id, request).subscribe({
-      next: () => this.loadTransactions(),
-      error: () => alert('Nie udało się edytować transakcji.'),
-    });
-  }
-
   openEditModal(transaction: TransactionResponse) {
-    this.modalService.openForEdit(transaction);
+    this.modalService.openTransactionForEdit(transaction);
   }
 
   // dla wersji mobile, po kliknieciu pojawia sie maly modal z zapytaniem czy edytowac czy usunac transakcje

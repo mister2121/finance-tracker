@@ -5,7 +5,7 @@
   @if (modalService.isAddTransactionOpen()) {
     <app-add-transaction-modal
       [transactionToEdit]="modalService.transactionToEdit()"
-      (closed)="modalService.close()"
+      (closed)="modalService.closeTransactionModal()"
     />
   }
 </div>
