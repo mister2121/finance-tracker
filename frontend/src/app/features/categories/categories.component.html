@@ -1,1 +1,248 @@
-<p>Categories page</p>
+<main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 text-white">
+  <div class="lg:flex lg:justify-between lg:items-center">
+    <div>
+      <h1 class="text-2xl font-bold">Kategorie</h1>
+      <p class="text-sm text-zinc-400">Zarządzaj swoimi kategoriami przychodów i wydatków.</p>
+    </div>
+
+    <button
+      type="button"
+      class="hidden lg:block lg:bg-brand-purple lg:text-zinc-200 lg:px-4 lg:py-2 lg:rounded-xl lg:font-medium"
+    >
+      + Dodaj konto
+    </button>
+  </div>
+  <!-- MOBILE  -->
+  <section class="flex flex-col gap-2 lg:hidden">
+    <button type="button" class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium">
+      + Dodaj kategorię
+    </button>
+    <h2 class="font-semibold font-xl">Wydatki</h2>
+    @for (c of expenseCategories; track c.id) {
+      <div class="flex justify-between bg-surface-elevated rounded-2xl p-2">
+        <div class="flex gap-2 p-4">
+          <p>{{ c.name }}</p>
+          <p
+            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-purple/15 text-brand-purple"
+          >
+            {{ c.type }}
+          </p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-surface-elevated"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16.862 4.487a2.06 2.06 0 0 1 2.915 2.914L7.5 19.68l-4 1 1-4L16.862 4.487Z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="p-2 rounded-lg text-zinc-400 hover:text-money-red hover:bg-surface-elevated"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 7h14Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+    <h2 class="font-semibold font-xl">Wydatki</h2>
+    @for (c of incomeCategories; track c.id) {
+      <div class="flex justify-between bg-surface-elevated rounded-2xl p-2">
+        <div class="flex gap-2 p-4">
+          <p>{{ c.name }}</p>
+          <p
+            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-purple/15 text-brand-purple"
+          >
+            {{ c.type }}
+          </p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-surface-elevated"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16.862 4.487a2.06 2.06 0 0 1 2.915 2.914L7.5 19.68l-4 1 1-4L16.862 4.487Z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="p-2 rounded-lg text-zinc-400 hover:text-money-red hover:bg-surface-elevated"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 7h14Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- DESKTOP -->
+  <section class="hidden lg:flex lg:flex-col lg:gap-2">
+    <div class="flex flex-col gap-2">
+      <h2 class="font-semibold font-xl">Wydatki</h2>
+      <div class="grid grid-cols-3 gap-2">
+        @for (c of expenseCategories; track c.id) {
+          <div class="flex justify-between bg-surface-elevated rounded-2xl p-2">
+            <div class="flex gap-2 p-4">
+              <p>{{ c.name }}</p>
+              <p
+                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-purple/15 text-brand-purple"
+              >
+                {{ c.type }}
+              </p>
+            </div>
+
+            <div class="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-surface-elevated"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.862 4.487a2.06 2.06 0 0 1 2.915 2.914L7.5 19.68l-4 1 1-4L16.862 4.487Z"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="p-2 rounded-lg text-zinc-400 hover:text-money-red hover:bg-surface-elevated"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 7h14Z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <h2 class="font-semibold font-xl">Przychody</h2>
+      <div class="grid grid-cols-3 gap-2">
+        @for (c of incomeCategories; track c.id) {
+          <div class="flex justify-between bg-surface-elevated rounded-2xl p-2">
+            <div class="flex gap-2 p-4">
+              <p>{{ c.name }}</p>
+              <p
+                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-purple/15 text-brand-purple"
+              >
+                {{ c.type }}
+              </p>
+            </div>
+
+            <div class="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-surface-elevated"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.862 4.487a2.06 2.06 0 0 1 2.915 2.914L7.5 19.68l-4 1 1-4L16.862 4.487Z"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="p-2 rounded-lg text-zinc-400 hover:text-money-red hover:bg-surface-elevated"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 7h14Z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</main>
