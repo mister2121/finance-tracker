@@ -8,3 +8,8 @@ export interface Category {
   name: string;
   type: CategoryType;
 }
+
+export interface CategoryRequest {
+  name: string;
+  type: CategoryType;
+}

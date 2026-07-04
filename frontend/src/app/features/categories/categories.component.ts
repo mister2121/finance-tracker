@@ -3,10 +3,11 @@ import { ModalService } from '../../core/services/modal.service';
 import { CategoryService } from '../../core/services/category.service';
 import { Category, CategoryType } from '../../core/models/category.model';
 import { CommonModule } from '@angular/common';
+import { AddCategoryModal } from './add-category-modal/add-category-modal';
 
 @Component({
   selector: 'app-categories',
-  imports: [CommonModule],
+  imports: [CommonModule, AddCategoryModal],
   templateUrl: './categories.component.html',
 })
 export class CategoriesComponent implements OnInit {
@@ -16,10 +17,11 @@ export class CategoriesComponent implements OnInit {
 
   categories: Category[] = [];
   CategoryType = CategoryType;
+  selectedCategory: Category | null = null;
 
   constructor() {
     effect(() => {
-      const saved = this.modalService.accountsSaved();
+      const saved = this.modalService.categorySaved();
 
       if (saved > 0) {
         this.loadCategories();
@@ -35,7 +37,9 @@ export class CategoriesComponent implements OnInit {
     this.categorySerivce.getCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.cdr.detectChanges();
+        });
       },
       error: () => {},
     });
@@ -51,5 +55,27 @@ export class CategoriesComponent implements OnInit {
     return this.categories
       .filter((c) => c.type === CategoryType.INCOME)
       .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  deleteCategory(id: string) {
+    this.categorySerivce.deleteCategory(id).subscribe({
+      next: () => {
+        this.loadCategories();
+      },
+      error: () => alert('Nie udało się usunąć kategorii.'),
+    });
+  }
+
+  openEditModal(category: Category) {
+    this.modalService.openCategoryForEdit(category);
+    this.closeActionSheet();
+  }
+
+  openActionSheet(category: Category) {
+    this.selectedCategory = category;
+  }
+
+  closeActionSheet() {
+    this.selectedCategory = null;
   }
 }
