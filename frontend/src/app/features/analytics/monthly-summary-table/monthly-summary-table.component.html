@@ -1,0 +1,248 @@
+<!-- MOBILE -->
+<section class="flex flex-col gap-2 lg:hidden">
+  <div class="bg-[#0b1120] border border-zinc-800/60 rounded-xl p-4 shadow-2xl">
+    <!-- NAGŁÓWEK SEKCJI -->
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-base font-semibold text-white">Podsumowanie miesięczne</h2>
+    </div>
+
+    <div
+      class="overflow-x-auto w-full rounded-lg border border-zinc-800/80 pb-3 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-zinc-900/40 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-indigo-500/80 [&::-webkit-scrollbar-thumb]:rounded-full"
+    >
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="text-zinc-400 bg-zinc-900/50 border-b border-zinc-800">
+            <th
+              class="text-left font-semibold p-2.5 text-zinc-200 min-w-[120px] border-r border-zinc-800/60 sticky left-0 z-10 bg-[#0f1626]"
+            >
+              Miesiąc
+            </th>
+            @for (row of analytics; track row.month) {
+              <th
+                class="text-center font-medium p-2.5 min-w-[65px] border-r border-zinc-800/60 text-zinc-300"
+              >
+                {{ monthShortNames[+row.month - 1] }}
+              </th>
+            }
+            <th
+              class="text-center font-semibold p-2.5 min-w-[75px] border-r border-zinc-800/60 text-zinc-200 bg-zinc-900/30"
+            >
+              Suma
+            </th>
+            <th class="text-center font-semibold p-2.5 min-w-[75px] text-zinc-200 bg-zinc-900/30">
+              Średnia
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-zinc-800/60 text-zinc-300">
+          <!-- Zarobki -->
+          <tr class="hover:bg-zinc-800/5 transition-colors">
+            <td
+              class="p-2.5 font-medium border-r border-zinc-800/60 whitespace-nowrap sticky left-0 z-10 bg-[#0b1120]"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]"
+                ></span>
+                Zarobki
+              </div>
+            </td>
+            @for (row of analytics; track row.month) {
+              <td
+                class="text-money-green text-center p-2.5 border-r border-zinc-800/60 whitespace-nowrap font-normal"
+              >
+                {{ row.totalIncome }} zł
+              </td>
+            }
+            <td
+              class="text-money-green text-center p-2.5 font-semibold border-r border-zinc-800/60 whitespace-nowrap bg-zinc-900/10"
+            >
+              {{ totalIncome | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+            </td>
+            <td
+              class="text-money-green text-center p-2.5 font-semibold whitespace-nowrap bg-zinc-900/10"
+            >
+              {{ avgIncome | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+            </td>
+          </tr>
+
+          <!-- Wydatki -->
+          <tr class="hover:bg-zinc-800/5 transition-colors">
+            <td
+              class="p-2.5 font-medium border-r border-zinc-800/60 whitespace-nowrap sticky left-0 z-10 bg-[#0b1120]"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_6px_rgba(244,63,94,0.4)]"
+                ></span>
+                Wydatki
+              </div>
+            </td>
+            @for (row of analytics; track row.month) {
+              <td
+                class="text-money-red text-center p-2.5 border-r border-zinc-800/60 whitespace-nowrap font-normal"
+              >
+                {{ row.totalExpenses }} zł
+              </td>
+            }
+            <td
+              class="text-money-red text-center p-2.5 font-semibold border-r border-zinc-800/60 whitespace-nowrap bg-zinc-900/10"
+            >
+              {{ totalExpenses | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+            </td>
+            <td
+              class="text-money-red text-center p-2.5 font-semibold whitespace-nowrap bg-zinc-900/10"
+            >
+              {{ avgExpenses | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+            </td>
+          </tr>
+
+          <!-- Balans -->
+          <tr class="hover:bg-zinc-800/5 transition-colors">
+            <td
+              class="p-2.5 font-medium border-r border-zinc-800/60 whitespace-nowrap sticky left-0 z-10 bg-[#0b1120]"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_6px_rgba(14,165,233,0.4)]"
+                ></span>
+                Balans
+              </div>
+            </td>
+            @for (row of analytics; track row.month) {
+              <td
+                class="text-money-blue text-center p-2.5 border-r border-zinc-800/60 whitespace-nowrap font-normal"
+              >
+                {{ row.balance }} zł
+              </td>
+            }
+            <td
+              class="text-money-blue text-center p-2.5 font-semibold border-r border-zinc-800/60 whitespace-nowrap bg-zinc-900/10"
+            >
+              {{ totalBalance | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+            </td>
+            <td
+              class="text-money-blue text-center p-2.5 font-semibold whitespace-nowrap bg-zinc-900/10"
+            >
+              {{ avgBalance | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- DESKTOP -->
+<section
+  class="hidden lg:block bg-[#0b1120] border border-zinc-800/60 rounded-xl p-5 shadow-2xl overflow-x-auto"
+>
+  <table class="w-full text-sm border-collapse">
+    <thead>
+      <tr class="text-zinc-400 border-b border-zinc-800/50">
+        <th
+          class="text-left font-semibold pb-4 pr-6 text-base text-white whitespace-nowrap min-w-[180px]"
+        >
+          Podsumowanie miesięczne
+        </th>
+
+        <!-- Miesiące -->
+        @for (row of analytics; track row.month) {
+          <th
+            class="text-center font-medium pb-4 px-3 border-r border-zinc-800/30 last:border-r-0 whitespace-nowrap min-w-[75px]"
+          >
+            {{ monthLongNames[+row.month - 1] }}
+          </th>
+        }
+
+        <th
+          class="text-center font-semibold pb-4 pl-6 pr-4 border-l-2 border-zinc-700/60 text-white whitespace-nowrap min-w-[90px]"
+        >
+          Suma
+        </th>
+        <th class="text-center font-semibold pb-4 px-4 text-white whitespace-nowrap min-w-[90px]">
+          Średnia
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-zinc-800/20">
+      <!-- WIERSZ: Zarobki -->
+      <tr class="hover:bg-zinc-800/10 transition-colors">
+        <td class="py-4 pr-6 font-medium text-zinc-300 whitespace-nowrap flex items-center gap-2">
+          <span
+            class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+          ></span>
+          Zarobki
+        </td>
+        @for (row of analytics; track row.month) {
+          <td
+            class="text-center py-4 px-3 font-semibold text-money-green border-r border-zinc-800/30 last:border-r-0 whitespace-nowrap"
+          >
+            {{ row.totalIncome }} zł
+          </td>
+        }
+        <!-- Suma i Średnia dla Zarobków -->
+        <td
+          class="text-center py-4 pl-6 pr-4 font-bold text-money-green border-l-2 border-zinc-700/60 whitespace-nowrap"
+        >
+          {{ totalIncome | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+        </td>
+        <td class="text-center py-4 px-4 font-bold text-money-green whitespace-nowrap">
+          {{ avgIncome | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+        </td>
+      </tr>
+
+      <!-- WIERSZ: Wydatki -->
+      <tr class="hover:bg-zinc-800/10 transition-colors">
+        <td class="py-4 pr-6 font-medium text-zinc-300 whitespace-nowrap flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]"></span>
+          Wydatki
+        </td>
+        @for (row of analytics; track row.month) {
+          <td
+            class="text-center py-4 px-3 font-semibold text-money-red border-r border-zinc-800/30 last:border-r-0 whitespace-nowrap"
+          >
+            {{ row.totalExpenses }} zł
+          </td>
+        }
+        <!-- Suma i Średnia dla Wydatków -->
+        <td
+          class="text-center py-4 pl-6 pr-4 font-bold text-money-red border-l-2 border-zinc-700/60 whitespace-nowrap"
+        >
+          {{ totalExpenses | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+        </td>
+        <td class="text-center py-4 px-4 font-bold text-money-red whitespace-nowrap">
+          {{ avgExpenses | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+        </td>
+      </tr>
+
+      <!-- WIERSZ: Balans -->
+      <tr class="hover:bg-zinc-800/10 transition-colors">
+        <td class="py-4 pr-6 font-medium text-zinc-300 whitespace-nowrap flex items-center gap-2">
+          <span
+            class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(14,165,233,0.5)]"
+          ></span>
+          Balans
+        </td>
+        @for (row of analytics; track row.month) {
+          <td
+            class="text-center py-4 px-3 font-semibold text-money-blue border-r border-zinc-800/30 last:border-r-0 whitespace-nowrap"
+          >
+            {{ row.balance }} zł
+          </td>
+        }
+        <!-- Suma i Średnia dla Bilansu -->
+        <td
+          class="text-center py-4 pl-6 pr-4 font-bold text-money-blue border-l-2 border-zinc-700/60 whitespace-nowrap"
+        >
+          {{ totalBalance | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+        </td>
+        <td class="text-center py-4 px-4 font-bold text-money-blue whitespace-nowrap">
+          {{ avgBalance | currency: 'zł' : 'code' : '1.2-2' : 'pl-PL' }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
