@@ -1,4 +1,4 @@
-package com.financetracker.backend.dto.response;
+package com.financetracker.backend.dto.response.analytics;
 
 import java.math.BigDecimal;
 

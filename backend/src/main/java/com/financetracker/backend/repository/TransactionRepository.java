@@ -29,4 +29,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
 
   @Query("SELECT t FROM Transaction t WHERE t.user.id = :userId AND t.transactionDate BETWEEN :start AND :end")
   Page<Transaction> findByUserAndDateRange(@Param("userId") UUID userId, @Param("start") LocalDate start, @Param("end") LocalDate end, Pageable pageable);
+
+  @Query("SELECT t.category.name, MONTH(t.transactionDate), SUM(t.amount) FROM Transaction t WHERE t.user.id = :userId AND t.type = :type AND YEAR(t.transactionDate) = :year GROUP BY t.category.name, MONTH(t.transactionDate)")
+  List<Object[]> findTotalExpensesPerCategory(@Param("userId") UUID userId, @Param("type") TransactionType type, @Param("year") int year);
+
 }

@@ -4,3 +4,8 @@ export interface MonthlyAnalytics {
   totalExpenses: number;
   balance: number;
 }
+
+export interface PerMonthAnalytics {
+  categoryName: string;
+  monthlyAmount: { [key: number]: number };
+}

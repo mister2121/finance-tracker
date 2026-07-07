@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.financetracker.backend.dto.response.MonthlyAnalyticsResponse;
+import com.financetracker.backend.dto.response.analytics.MonthlyAnalyticsResponse;
+import com.financetracker.backend.dto.response.analytics.PerCategoryResponse;
 import com.financetracker.backend.service.AnalyticsService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,11 @@ public class AnalyticsController {
   @GetMapping
   public ResponseEntity<List<MonthlyAnalyticsResponse>> getYearlyAnalytics(@RequestParam int year) {
     return ResponseEntity.ok(analyticsService.getYearlyAnalytics(year));
+  }
+
+  @GetMapping("/categories")
+  public ResponseEntity<List<PerCategoryResponse>>
+  getPerCategoryAnalytics(@RequestParam int year) {
+    return ResponseEntity.ok(analyticsService.getPerCategoryAnalytics(year));
   }
 }
