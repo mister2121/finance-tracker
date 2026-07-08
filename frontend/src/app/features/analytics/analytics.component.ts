@@ -4,11 +4,17 @@ import { AnalyticsService } from '../../core/services/analytics.service';
 import { MonthlyAnalytics, PerMonthAnalytics } from '../../core/models/analytics.model';
 import { MonthlySummaryTableComponent } from './monthly-summary-table/monthly-summary-table.component';
 import { PerCategoryTableComponent } from './per-category-table/per-category-table.component';
+import { IncomeExpenseChart } from './income-expense-chart/income-expense-chart';
 
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, MonthlySummaryTableComponent, PerCategoryTableComponent],
+  imports: [
+    CommonModule,
+    MonthlySummaryTableComponent,
+    PerCategoryTableComponent,
+    IncomeExpenseChart,
+  ],
   templateUrl: './analytics.component.html',
 })
 export class AnalyticsComponent implements OnInit {

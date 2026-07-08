@@ -1,4 +1,4 @@
-<main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 text-white">
+<main class="bg-surface-bg min-h-screen p-4 pb-20 lg:pb-4 flex flex-col gap-2 text-white">
   <div class="lg:flex lg:justify-between lg:items-center">
     <div>
       <h1 class="text-2xl font-bold">Analiza finansów</h1>
@@ -7,6 +7,8 @@
       </p>
     </div>
   </div>
+  <!-- WYKRES ZAROBKI VS WYDATKI  -->
+  <app-income-expense-chart [analytics]="analytics" />
   <!-- TABELA PODSUMOWUJACA ROK - MIESIECZNE WYDATKI, ZAROBKI, BALANS, SREDNIA ROCZNA, SUMA ROCZNA -->
   <app-monthly-summary-table [analytics]="analytics" />
   <!-- TABELA PODSUMOWUJACA KAZDY MIESIAC Z PODZIALAMI NA KATEGORIE, SREDNIA ROCZNA, SUMA ROCZNA  -->
