@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class AnalyticsService {
-  private final AccountService accountService;
   private final TransactionService transactionService;
   private final UserRepository userRepository;
   private final TransactionRepository transactionRepository;

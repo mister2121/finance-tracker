@@ -9,6 +9,7 @@ import { AccountsComponent } from './features/accounts/accounts.component';
 import { MainLayoutComponent } from './shared/components/layout/mainlayout.component';
 import { CategoriesComponent } from './features/categories/categories.component';
 import { AnalyticsComponent } from './features/analytics/analytics.component';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'transactions', component: TransactionsComponent },
       { path: 'categories', component: CategoriesComponent },
       { path: 'analytics', component: AnalyticsComponent },
+      { path: 'profile', component: ProfileComponent },
     ],
   },
 ];

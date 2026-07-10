@@ -18,6 +18,11 @@ public class RegisterRequest {
   @Size(min = 8, message = "Password must be at least 8 characters long")
   private String password;
 
+ @NotBlank(message = "First name is required")
+  @Size(min = 1, message = "First name must be at least 1 characters long")
   private String firstName;
+  
+   @NotBlank(message = "Last name is required")
+  @Size(min = 1, message = "Last name must be at least 1 characters long")
   private String lastName;
 }

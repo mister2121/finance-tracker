@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.financetracker.backend.model.Account;
+import com.financetracker.backend.model.User;
 
 public interface AccountRepository extends JpaRepository<Account, UUID> {
   List<Account> findByUserId(UUID userId);
+  void deleteAllByUser(User user);
 }

@@ -33,6 +33,8 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 
+  // potrzebne do /profile strony i wyswietlania danych uzytkownika
+
   getUserInitials(): string {
     const firstName = localStorage.getItem('firstName') || '';
     const lastName = localStorage.getItem('lastName') || '';
@@ -41,5 +43,17 @@ export class AuthService {
     const lastInitial = lastName.charAt(0).toUpperCase();
 
     return `${firstInitial}${lastInitial}`;
+  }
+
+  getUserFirstName(): string {
+    return localStorage.getItem('firstName') || '';
+  }
+
+  getUserLastName(): string {
+    return localStorage.getItem('lastName') || '';
+  }
+
+  getUserEmail(): string {
+    return localStorage.getItem('email') || '';
   }
 }

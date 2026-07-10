@@ -11,6 +11,7 @@ module.exports = {
         },
         brand: {
           purple: '#583ecb',
+          border: '#2A3148',
         },
         money: {
           green: '#10c67a',

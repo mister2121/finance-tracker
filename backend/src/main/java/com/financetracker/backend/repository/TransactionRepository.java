@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.financetracker.backend.model.Transaction;
 import com.financetracker.backend.model.TransactionType;
+import com.financetracker.backend.model.User;
 
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
   List<Transaction> findByUserId(UUID userId);
@@ -33,4 +34,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
   @Query("SELECT t.category.name, MONTH(t.transactionDate), SUM(t.amount) FROM Transaction t WHERE t.user.id = :userId AND t.type = :type AND YEAR(t.transactionDate) = :year GROUP BY t.category.name, MONTH(t.transactionDate)")
   List<Object[]> findTotalExpensesPerCategory(@Param("userId") UUID userId, @Param("type") TransactionType type, @Param("year") int year);
 
+  void deleteAllByUser(User user);
 }
