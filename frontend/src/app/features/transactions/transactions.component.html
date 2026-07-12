@@ -6,7 +6,7 @@
     />
   }
 
-  <main class="bg-surface-bg min-h-screen p-4 flex flex-col gap-2 text-white">
+  <main class="bg-surface-bg min-h-screen p-4 pb-24 lg:pb-4 flex flex-col gap-2 text-white">
     <div class="flex flex-row justify-between">
       <div>
         <h1 class="text-2xl font-bold">Transakcje</h1>
@@ -200,6 +200,58 @@
           </button>
         }
       </div>
+      <!-- PAGINACJA MOBILE -->
+      @if (transactions && transactions.totalPages > 1) {
+        <div class="flex items-center justify-between mt-2">
+          <button
+            type="button"
+            [disabled]="currentPage === 0"
+            (click)="previousPage()"
+            class="flex items-center gap-2 px-4 py-3 rounded-xl border border-zinc-800 bg-surface-card text-zinc-300 text-sm disabled:opacity-40 disabled:cursor-not-allowed active:bg-surface-elevated"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
+
+            Poprzednia
+          </button>
+
+          <span class="text-sm text-zinc-400">
+            {{ currentPage + 1 }} / {{ transactions.totalPages }}
+          </span>
+
+          <button
+            type="button"
+            [disabled]="currentPage >= transactions.totalPages - 1"
+            (click)="nextPage()"
+            class="flex items-center gap-2 px-4 py-3 rounded-xl border border-zinc-800 bg-surface-card text-zinc-300 text-sm disabled:opacity-40 disabled:cursor-not-allowed active:bg-surface-elevated"
+          >
+            Następna
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      }
       @if (selectedTransaction) {
         <!-- OVERLAY -->
         <div class="fixed inset-0 z-50 bg-black/60 lg:hidden" (click)="closeActionSheet()">
@@ -436,6 +488,57 @@
           </table>
         </div>
       </div>
+      @if (transactions && transactions.totalPages > 1) {
+        <div class="flex items-center justify-between mt-4">
+          <button
+            type="button"
+            [disabled]="currentPage === 0"
+            (click)="previousPage()"
+            class="flex items-center gap-2 px-4 py-3 rounded-xl border border-zinc-800 bg-surface-card text-zinc-300 text-sm disabled:opacity-40 disabled:cursor-not-allowed active:bg-surface-elevated"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
+
+            Poprzednia
+          </button>
+
+          <span class="text-sm text-zinc-400">
+            Strona {{ currentPage + 1 }} z {{ transactions.totalPages }}
+          </span>
+
+          <button
+            type="button"
+            [disabled]="currentPage >= transactions.totalPages - 1"
+            (click)="nextPage()"
+            class="flex items-center gap-2 px-4 py-3 rounded-xl border border-zinc-800 bg-surface-card text-zinc-300 text-sm disabled:opacity-40 disabled:cursor-not-allowed active:bg-surface-elevated"
+          >
+            Następna
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      }
     </section>
   </main>
 } @else {

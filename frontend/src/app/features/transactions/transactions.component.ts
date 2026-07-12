@@ -25,6 +25,9 @@ export class TransactionsComponent implements OnInit {
   selectedDate = new Date();
   selectedTransaction: TransactionResponse | null = null;
 
+  currentPage = 0;
+  pageSize = 8;
+
   constructor() {
     effect(() => {
       const saved = this.modalService.transactionSaved();
@@ -43,19 +46,20 @@ export class TransactionsComponent implements OnInit {
 
     const year = this.selectedDate.getFullYear();
     const month = this.selectedDate.getMonth() + 1;
-    const page = 0;
-    const size = 20;
 
-    this.transactionService.getTransactions(year, month, page, size).subscribe({
-      next: (transactions) => {
-        this.transactions = transactions;
-        this.cdr.detectChanges();
-      },
-      error: () => {},
-    });
+    this.transactionService
+      .getTransactions(year, month, this.currentPage, this.pageSize)
+      .subscribe({
+        next: (transactions) => {
+          this.transactions = transactions;
+          this.cdr.detectChanges();
+        },
+        error: () => {},
+      });
   }
 
   previousMonth() {
+    this.currentPage = 0;
     this.selectedDate = new Date(
       this.selectedDate.getFullYear(),
       this.selectedDate.getMonth() - 1,
@@ -65,6 +69,7 @@ export class TransactionsComponent implements OnInit {
   }
 
   nextMonth() {
+    this.currentPage = 0;
     this.selectedDate = new Date(
       this.selectedDate.getFullYear(),
       this.selectedDate.getMonth() + 1,
@@ -109,5 +114,20 @@ export class TransactionsComponent implements OnInit {
 
   closeActionSheet() {
     this.selectedTransaction = null;
+  }
+
+  // paginacja
+  nextPage() {
+    if (this.transactions && this.currentPage < this.transactions.totalPages - 1) {
+      this.currentPage++;
+      this.loadTransactions();
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadTransactions();
+    }
   }
 }
