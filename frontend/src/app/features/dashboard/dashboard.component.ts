@@ -42,6 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       const saved = this.modalService.transactionSaved();
       if (saved > 0) {
         this.loadDashboard();
+        this.loadNetWorthHistory();
       }
     });
   }
@@ -52,7 +53,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.netWorthHistory.length) this.renderChart();
+    if (this.netWorthHistory.length) {
+      setTimeout(() => this.renderChart());
+    }
   }
 
   loadDashboard() {
@@ -70,10 +73,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   loadNetWorthHistory() {
-    this.dashboardService.getNetWorthHistory(6).subscribe({
+    this.dashboardService.getNetWorthHistory(12).subscribe({
       next: (data) => {
         this.netWorthHistory = data;
-        this.renderChart();
+        this.cdr.detectChanges();
+        setTimeout(() => this.renderChart());
       },
       error: () => {},
     });
@@ -142,5 +146,36 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (type === TransactionType.INCOME) return '+';
     if (type === TransactionType.EXPENSE) return '-';
     return '';
+  }
+
+  getBalanceColorClass(balance: number): string {
+    if (balance > 0) return 'text-money-green';
+    if (balance < 0) return 'text-money-red';
+    return 'text-white';
+  }
+
+  getBalancePrefix(balance: number): string {
+    return balance > 0 ? '+' : '';
+  }
+
+  get largestAccount(): { name: string } | null {
+    if (!this.dashboard?.wealthSummary.accounts?.length) return null;
+    return this.dashboard.wealthSummary.accounts.reduce((max, acc) =>
+      acc.balance > max.balance ? acc : max,
+    );
+  }
+
+  get monthOverMonthChange(): number | null {
+    if (this.netWorthHistory.length < 2) return null;
+    const prev = this.netWorthHistory[this.netWorthHistory.length - 2].netWorth;
+    const current = this.netWorthHistory[this.netWorthHistory.length - 1].netWorth;
+    if (prev === 0) return null;
+    return ((current - prev) / Math.abs(prev)) * 100;
+  }
+
+  getChangeColorClass(change: number): string {
+    if (change > 0) return 'text-money-green';
+    if (change < 0) return 'text-money-red';
+    return 'text-white';
   }
 }
