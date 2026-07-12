@@ -11,6 +11,7 @@ import { DashboardAccount } from '../../../core/models/account.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalService } from '../../../core/services/modal.service';
+import { Category, CategoryType } from '../../../core/models/category.model';
 
 @Component({
   selector: 'app-add-transaction-modal',
@@ -29,7 +30,7 @@ export class AddTransactionModal {
   @Output() closed = new EventEmitter<void>();
   TransactionType = TransactionType;
   accounts: DashboardAccount[] = [];
-  categories: { id: string; name: string }[] = [];
+  categories: Category[] = [];
   selectedType: TransactionType = TransactionType.EXPENSE;
   amount: number = 0;
   accountId = '';
@@ -37,6 +38,14 @@ export class AddTransactionModal {
   transactionDate = new Date().toISOString().split('T')[0];
   note = '';
   toAccountId = '';
+
+  // BŁĘDY WALIDACJI
+  amountError = '';
+  accountIdError = '';
+  categoryIdError = '';
+  transactionDateError = '';
+  toAccountIdError = '';
+  submitError = '';
 
   ngOnInit() {
     this.accountService.getAccounts().subscribe((data) => {
@@ -69,12 +78,92 @@ export class AddTransactionModal {
     }
   }
 
+  // czy formularz jest poprawny?
+  validateTransactionForm(): boolean {
+    this.amountError = '';
+    this.accountIdError = '';
+    this.categoryIdError = '';
+    this.transactionDateError = '';
+    this.toAccountIdError = '';
+    this.submitError = '';
+
+    let isValid = true;
+
+    if (this.amount === null || this.amount === undefined || `${this.amount}`.trim() === '') {
+      this.amountError = 'Kwota jest wymagana';
+      isValid = false;
+    } else if (this.selectedType === TransactionType.EXPENSE && this.amount >= 0) {
+      this.amountError = 'Kwota wydatku musi być mniejsza od zera';
+      isValid = false;
+    } else if (this.selectedType === TransactionType.INCOME && this.amount <= 0) {
+      this.amountError = 'Kwota przychodu musi być większa od zera';
+      isValid = false;
+    } else if (this.selectedType === TransactionType.TRANSFER && this.amount <= 0) {
+      this.amountError = 'Kwota transferu musi być większa od zera';
+      isValid = false;
+    }
+
+    if (!this.accountId) {
+      this.accountIdError = 'Konto jest wymagane';
+      isValid = false;
+    }
+
+    if (!this.transactionDate) {
+      this.transactionDateError = 'Data jest wymagana';
+      isValid = false;
+    }
+
+    if (this.selectedType !== TransactionType.TRANSFER && !this.categoryId) {
+      this.categoryIdError = 'Kategoria jest wymagana';
+      isValid = false;
+    }
+
+    if (this.selectedType === TransactionType.TRANSFER) {
+      if (!this.toAccountId) {
+        this.toAccountIdError = 'Konto docelowe jest wymagane dla transferu';
+        isValid = false;
+      } else if (this.accountId && this.toAccountId === this.accountId) {
+        this.toAccountIdError = 'Konto docelowe musi różnić się od konta źródłowego';
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  clearAmountError() {
+    this.amountError = '';
+  }
+
+  clearAccountIdError() {
+    this.accountIdError = '';
+  }
+
+  clearCategoryIdError() {
+    this.categoryIdError = '';
+  }
+
+  clearTransactionDateError() {
+    this.transactionDateError = '';
+  }
+
+  clearToAccountIdError() {
+    this.toAccountIdError = '';
+  }
+
   onSubmit() {
+    const formValid = this.validateTransactionForm();
+
+    if (!formValid) {
+      this.cdr.detectChanges();
+      return;
+    }
+
     const request: TransactionRequest = {
       type: this.selectedType,
-      amount: this.amount,
+      amount: this.amount as number,
       accountId: this.accountId,
-      categoryId: this.categoryId || undefined,
+      categoryId: this.selectedType === TransactionType.TRANSFER ? undefined : this.categoryId,
       transactionDate: this.transactionDate,
       note: this.note || undefined,
       toAccountId: this.toAccountId,
@@ -89,7 +178,10 @@ export class AddTransactionModal {
         this.modalService.notifyTransactionSaved();
         this.closed.emit();
       },
-      error: (err) => console.error(err),
+      error: () => {
+        this.submitError = 'Nie udało się zapisać transakcji. Spróbuj ponownie.';
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -107,5 +199,15 @@ export class AddTransactionModal {
       return 'bg-money-blue/15 text-money-blue';
     }
     return 'text-zinc-400';
+  }
+
+  get filteredCategories(): Category[] {
+    if (this.selectedType === TransactionType.EXPENSE) {
+      return this.categories.filter((c) => c.type === CategoryType.EXPENSE);
+    }
+    if (this.selectedType === TransactionType.INCOME) {
+      return this.categories.filter((c) => c.type === CategoryType.INCOME);
+    }
+    return [];
   }
 }

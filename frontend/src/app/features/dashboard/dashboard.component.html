@@ -110,13 +110,15 @@
               <div
                 class="w-10 h-10 rounded-xl bg-surface-elevated flex items-center justify-center"
               >
-                <span class="text-zinc-400">{{ transaction.categoryName[0] }}</span>
+                <span class="text-zinc-400">{{
+                  (transaction.categoryName || transaction.accountName)[0]
+                }}</span>
               </div>
               <div>
-                <p>{{ transaction.note }}</p>
+                <p>{{ transaction.note || 'Bez opisu' }}</p>
                 <div class="flex gap-2 text-zinc-400 text-sm">
                   <p>{{ transaction.transactionDate }} -</p>
-                  <p>{{ transaction.categoryName }}</p>
+                  <p>{{ transaction.categoryName || 'Transfer' }}</p>
                 </div>
               </div>
             </div>

@@ -40,7 +40,7 @@ export interface TransactionResponse {
   amount: number;
   type: TransactionType;
   categoryName: string | null;
-  note: string;
+  note: string | null;
   transactionDate: string;
   createdAt: string;
   updatedAt: string;

@@ -31,7 +31,7 @@
         class="mx-4 mt-4 grid grid-cols-3 overflow-hidden rounded-xl border border-zinc-700 bg-surface-elevated lg:mx-6"
       >
         <button
-          (click)="selectedType = TransactionType.EXPENSE"
+          (click)="selectedType = TransactionType.EXPENSE; clearCategoryIdError()"
           [disabled]="!!transactionToEdit"
           class="px-2 py-3 text-sm font-medium transition-colors lg:py-4"
           [ngClass]="
@@ -45,7 +45,7 @@
           Wydatek
         </button>
         <button
-          (click)="selectedType = TransactionType.INCOME"
+          (click)="selectedType = TransactionType.INCOME; clearCategoryIdError()"
           [disabled]="!!transactionToEdit"
           class="border-x border-zinc-700 px-2 py-3 text-sm font-medium transition-colors lg:py-4"
           [ngClass]="
@@ -59,7 +59,12 @@
           Przychód
         </button>
         <button
-          (click)="selectedType = TransactionType.TRANSFER"
+          (click)="
+            selectedType = TransactionType.TRANSFER;
+            clearToAccountIdError();
+            clearCategoryIdError();
+            categoryId = ''
+          "
           [disabled]="!!transactionToEdit"
           class="px-2 py-3 text-sm font-medium transition-colors lg:py-4"
           [ngClass]="
@@ -79,8 +84,12 @@
           type="number"
           name="amount"
           [(ngModel)]="amount"
+          (ngModelChange)="clearAmountError()"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         />
+        @if (amountError) {
+          <p class="mt-1 text-xs text-money-red">{{ amountError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Wpisz kwotę transakcji</p>
         @if (transactionToEdit) {
           <p class="mt-1 text-xs text-amber-400/80">
@@ -95,22 +104,32 @@
           class="mt-2 min-h-24 w-full resize-none rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         ></textarea>
         <p class="mt-1 text-xs text-zinc-500">Krótki opis transakcji</p>
-        <label class="mt-4 text-sm font-medium text-zinc-200">Kategoria</label>
+        <label
+          class="mt-4 text-sm font-medium"
+          [ngClass]="selectedType === TransactionType.TRANSFER ? 'text-zinc-600' : 'text-zinc-200'"
+          >Kategoria</label
+        >
         <select
           [(ngModel)]="categoryId"
           name="categoryId"
+          (ngModelChange)="clearCategoryIdError()"
+          [disabled]="selectedType === TransactionType.TRANSFER"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         >
           <option value="">Wybierz kategorię</option>
-          @for (cat of categories; track cat.id) {
+          @for (cat of filteredCategories; track cat.id) {
             <option [value]="cat.id">{{ cat.name }}</option>
           }
         </select>
+        @if (categoryIdError) {
+          <p class="mt-1 text-xs text-money-red">{{ categoryIdError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Wybierz odpowiednią kategorię</p>
         <label class="mt-4 text-sm font-medium text-zinc-200">Konto</label>
         <select
           [(ngModel)]="accountId"
           name="accountId"
+          (ngModelChange)="clearAccountIdError()"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         >
           <option value="">Wybierz konto</option>
@@ -118,14 +137,21 @@
             <option [value]="acc.id">{{ acc.name }}</option>
           }
         </select>
+        @if (accountIdError) {
+          <p class="mt-1 text-xs text-money-red">{{ accountIdError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Konto, z którego wykonano transakcję</p>
         <label class="mt-4 text-sm font-medium text-zinc-200">Data</label>
         <input
           type="date"
           [(ngModel)]="transactionDate"
           name="transactionDate"
+          (ngModelChange)="clearTransactionDateError()"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         />
+        @if (transactionDateError) {
+          <p class="mt-1 text-xs text-money-red">{{ transactionDateError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Data transakcji</p>
         <label
           class="mt-4 text-sm font-medium text-zinc-200"
@@ -136,6 +162,7 @@
         <select
           [(ngModel)]="toAccountId"
           name="toAccountId"
+          (ngModelChange)="clearToAccountIdError()"
           [disabled]="selectedType !== TransactionType.TRANSFER"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         >
@@ -144,10 +171,16 @@
             <option [value]="acc.id">{{ acc.name }}</option>
           }
         </select>
+        @if (toAccountIdError) {
+          <p class="mt-1 text-xs text-money-red">{{ toAccountIdError }}</p>
+        }
       </form>
       <div
         class="sticky bottom-0 z-20 grid grid-cols-2 gap-3 border-t border-zinc-800 bg-surface-card p-4 lg:px-6"
       >
+        @if (submitError) {
+          <p class="col-span-2 text-center text-sm text-money-red">{{ submitError }}</p>
+        }
         <button
           (click)="closed.emit()"
           class="rounded-xl border border-zinc-700 bg-surface-elevated py-3 font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white active:bg-zinc-800"

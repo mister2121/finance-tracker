@@ -165,14 +165,14 @@
               class="w-10 h-10 rounded-xl bg-brand-purple/30 flex items-center justify-center shrink-0"
             >
               <span class="font-semibold">
-                {{ t.note.charAt(0) }}
+                {{ (t.note || t.accountName).charAt(0) }}
               </span>
             </div>
 
             <!-- OPIS -->
             <div class="flex-1 min-w-0">
               <p class="font-medium truncate">
-                {{ t.note }}
+                {{ t.note || 'Bez opisu' }}
               </p>
 
               <div class="flex items-center gap-1 text-xs text-zinc-400 truncate">
@@ -398,9 +398,9 @@
                       <div
                         class="w-10 h-10 rounded-xl bg-surface-elevated flex items-center justify-center text-zinc-400 text-xs font-semibold shrink-0"
                       >
-                        {{ t.note.charAt(0) }}
+                        {{ (t.note || t.accountName).charAt(0) }}
                       </div>
-                      <span class="text-zinc-100 font-medium">{{ t.note }}</span>
+                      <span class="text-zinc-100 font-medium">{{ t.note || 'Bez opisu' }}</span>
                     </div>
                   </td>
 
