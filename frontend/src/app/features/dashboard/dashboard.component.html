@@ -11,21 +11,25 @@
 
       <button
         (click)="modalService.openTransactionModal()"
-        class="bg-brand-purple text-white px-4 py-2 rounded-xl text-sm font-medium"
+        class="bg-brand-purple text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors hover:bg-violet-700 active:bg-violet-800"
       >
         + Dodaj transakcję
       </button>
     </div>
 
     <!-- KARTA LACZNY MAJATEK -->
-    <div class="bg-surface-card rounded-2xl p-5 text-sm text-white lg:col-span-2">
+    <div
+      class="bg-surface-card border border-brand-border rounded-2xl p-5 text-sm text-white lg:col-span-2"
+    >
       <p class="text-zinc-400">Łączny majątek</p>
       <p class="text-2xl font-bold">{{ dashboard.wealthSummary.totalNetWorth }} zł</p>
       <p><span class="text-money-green">+3 500 zł</span> od kwietnia 2026</p>
     </div>
 
     <!-- KARTA MIESIECZNY BILANS -->
-    <div class="bg-surface-card rounded-2xl p-5 text-white lg:col-span-1">
+    <div
+      class="bg-surface-card border border-brand-border rounded-2xl p-5 text-white lg:col-span-1"
+    >
       <p class="text-sm text-zinc-400">Miesięczny bilans</p>
       <span class="text-2xl font-bold text-money-green"
         >+{{ dashboard.transactionSummary.transactionBalance }}</span
@@ -43,10 +47,25 @@
     </div>
 
     <!-- KARTA LISTA KONT -->
-    <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-1">
+    <div class="bg-surface-card border border-brand-border rounded-2xl p-5 text-white lg:order-1">
       <div class="flex justify-between">
         <p class="text-zinc-400">Konta</p>
-        <a routerLink="/accounts" class="text-brand-purple">Zarządzaj</a>
+        <div
+          routerLink="/accounts"
+          class="flex items-center text-brand-purple cursor-pointer transition-all duration-200 hover:text-[#7762d1]"
+        >
+          <p>Zarządzaj</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-4"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </div>
       </div>
       @for (account of dashboard.wealthSummary.accounts; track account.id) {
         <div class="flex justify-between items-center border border-zinc-600 rounded-2xl p-2 mt-2">
@@ -63,10 +82,25 @@
     </div>
 
     <!-- KARTA OSTATNIE TRANSAKCJE -->
-    <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-3">
+    <div class="bg-surface-card border border-brand-border rounded-2xl p-5 text-white lg:order-3">
       <div class="flex justify-between">
         <p class="text-zinc-400">Ostatnie transakcje</p>
-        <a routerLink="/transactions" class="text-brand-purple">Zobacz wszystkie</a>
+        <div
+          routerLink="/transactions"
+          class="flex items-center text-brand-purple cursor-pointer transition-all duration-200 hover:text-[#7762d1]"
+        >
+          <p>Zobacz wszystkie</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-4"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </div>
       </div>
 
       <div class="flex flex-col divide-y divide-zinc-700">
@@ -102,10 +136,25 @@
     </div>
 
     <!-- KARTA WYDATKI WG KATEGORII -->
-    <div class="bg-surface-card rounded-2xl p-5 text-white lg:order-2">
+    <div class="bg-surface-card border border-brand-border rounded-2xl p-5 text-white lg:order-2">
       <div class="flex justify-between items-center">
         <p class="text-zinc-400">Wydatki wg kategorii</p>
-        <p class="text-brand-purple">Szczegóły</p>
+        <div
+          routerLink="/analytics"
+          class="flex items-center text-brand-purple cursor-pointer transition-all duration-200 hover:text-[#7762d1]"
+        >
+          <p>Szczegóły</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-4"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </div>
       </div>
 
       <div class="mt-4 flex flex-col gap-3">
@@ -136,18 +185,18 @@
     </div>
 
     <!-- KARTA WSKAZÓWKI -->
-    <div class="bg-surface-card rounded-2xl p-5 text-white lg:col-span-2 lg:order-4">
+    <div
+      class="bg-surface-card border border-brand-border rounded-2xl p-5 text-white lg:col-span-2 lg:order-4"
+    >
       <p class="font-medium">Wskazówka</p>
       <p class="text-sm">Twoje wydatki na jedzenie są o 15% niższe niż w poprzednim miesiącu.</p>
     </div>
 
     <!-- KARTA SZYBKIE AKCJE -->
-    <div class="lg:bg-surface-card lg:rounded-2xl lg:p-5 lg:text-white lg:order-5">
+    <div
+      class="border border-brand-border lg:bg-surface-card lg:rounded-2xl lg:p-5 lg:text-white lg:order-5"
+    >
       <p class="font-medium">SZYBKIE AKCJE</p>
     </div>
-
-    <!-- <button (click)="onLogout()" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
-      Logout
-    </button> -->
   </main>
 }

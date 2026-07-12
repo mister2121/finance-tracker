@@ -12,14 +12,17 @@
     <button
       type="button"
       (click)="modalService.openCategoryModal()"
-      class="hidden lg:block lg:bg-brand-purple lg:text-zinc-200 lg:px-4 lg:py-2 lg:rounded-xl lg:font-medium"
+      class="hidden lg:block lg:bg-brand-purple lg:text-zinc-200 lg:px-4 lg:py-2 lg:rounded-xl lg:font-medium lg:transition-colors lg:hover:bg-violet-700 lg:active:bg-violet-800"
     >
       + Dodaj kategorie
     </button>
   </div>
   <!-- MOBILE  -->
   <section class="flex flex-col gap-2 lg:hidden">
-    <button type="button" class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium">
+    <button
+      type="button"
+      class="bg-brand-purple text-zinc-200 px-4 py-2 rounded-xl font-medium transition-colors hover:bg-violet-700 active:bg-violet-800"
+    >
       + Dodaj kategorię
     </button>
     <h2 class="font-semibold font-xl">Wydatki</h2>
