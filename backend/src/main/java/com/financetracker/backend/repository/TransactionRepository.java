@@ -35,4 +35,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
   List<Object[]> findTotalExpensesPerCategory(@Param("userId") UUID userId, @Param("type") TransactionType type, @Param("year") int year);
 
   void deleteAllByUser(User user);
-}
+
+  @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.user.id = :userId AND t.type = :type AND t.transactionDate > :date")
+  BigDecimal findSumByTypeAfterDate(@Param("userId") UUID userId, @Param("type") TransactionType type, @Param("date") LocalDate date);
+  }

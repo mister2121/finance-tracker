@@ -24,3 +24,8 @@ export interface ExpenseBreakdown {
   totalAmount: number;
   percentage: number;
 }
+
+export interface NetWorthPoint {
+  monthLabel: string;
+  netWorth: number;
+}

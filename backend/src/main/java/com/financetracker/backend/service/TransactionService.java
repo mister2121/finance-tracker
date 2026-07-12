@@ -225,6 +225,13 @@ public class TransactionService {
   }
 
 
+  // wykres laczny majatek
+  public BigDecimal getSumByTypeAfterDate(UUID userId, TransactionType type, LocalDate date) {
+    BigDecimal result = transactionRepository.findSumByTypeAfterDate(userId, type, date);
+    return result != null ? result : BigDecimal.ZERO;
+  }
+
+
   // 7. PAGINACJA W TRANSAKCJI W ZAKLADCE "TRANSAKCJE"
   public PagedResponse<TransactionResponse> getTransactionsForMonth(int year, int month, Pageable pageable) {
     User user = getAuthenticatedUser();
