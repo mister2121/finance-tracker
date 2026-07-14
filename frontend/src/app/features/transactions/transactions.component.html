@@ -425,8 +425,11 @@
 
                   <td class="py-4 pr-4">
                     <span class="inline-flex items-center gap-2 text-zinc-300">
-                      <span class="w-2 h-2 rounded-full bg-zinc-500"></span>
-                      {{ t.type }}
+                      <span
+                        class="w-2 h-2 rounded-full"
+                        [ngClass]="getDotColorClass(t.type)"
+                      ></span>
+                      {{ t.type | transactionTypeLabel }}
                     </span>
                   </td>
 

@@ -16,12 +16,13 @@ import { CommonModule } from '@angular/common';
 import { TransactionType } from '../../core/models/transaction.model';
 import { ModalService } from '../../core/services/modal.service';
 import { Chart, registerables } from 'chart.js';
+import { AccountTypeLabelPipe } from '../../core/pipes/account-type.pipe';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, AccountTypeLabelPipe],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, AfterViewInit {

@@ -9,7 +9,7 @@ export class CategoryService {
 
   getCategories() {
     return this.http.get<{ id: string; name: string; type: CategoryType }[]>(
-      'http://localhost:8080/api/categories',
+      `${environment.apiUrl}/api/categories`,
     );
   }
 

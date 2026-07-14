@@ -4,10 +4,11 @@ import { CategoryService } from '../../core/services/category.service';
 import { Category, CategoryType } from '../../core/models/category.model';
 import { CommonModule } from '@angular/common';
 import { AddCategoryModal } from './add-category-modal/add-category-modal';
+import { CategoryTypeLabelPipe } from '../../core/pipes/category-type.pipe';
 
 @Component({
   selector: 'app-categories',
-  imports: [CommonModule, AddCategoryModal],
+  imports: [CommonModule, AddCategoryModal, CategoryTypeLabelPipe],
   templateUrl: './categories.component.html',
 })
 export class CategoriesComponent implements OnInit {
@@ -68,11 +69,10 @@ export class CategoriesComponent implements OnInit {
     this.categorySerivce.deleteCategory(id).subscribe({
       next: () => {
         this.loadCategories();
+        alert('Transakcja usunięta.');
       },
       error: () => alert('Nie udało się usunąć kategorii.'),
     });
-
-    alert('Transakcja usunięta.');
   }
 
   openEditModal(category: Category) {

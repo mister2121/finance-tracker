@@ -9,10 +9,11 @@ import {
 import { Subscription } from 'rxjs';
 import { AddTransactionModal } from './add-transaction-modal/add-transaction-modal';
 import { ModalService } from '../../core/services/modal.service';
+import { TransactionTypeLabelPipe } from '../../core/pipes/transaction-type.pipe';
 
 @Component({
   selector: 'app-transactions',
-  imports: [CommonModule, AddTransactionModal],
+  imports: [CommonModule, AddTransactionModal, TransactionTypeLabelPipe],
   templateUrl: './transactions.component.html',
 })
 export class TransactionsComponent implements OnInit {
@@ -96,6 +97,13 @@ export class TransactionsComponent implements OnInit {
     return 'text-white';
   }
 
+  getDotColorClass(type: TransactionType): string {
+    if (type === TransactionType.INCOME) return 'bg-money-green';
+    if (type === TransactionType.EXPENSE) return 'bg-money-red';
+    if (type === TransactionType.TRANSFER) return 'bg-money-blue';
+    return 'bg-zinc-500';
+  }
+
   deleteTransaction(id: string) {
     const confirmed = confirm(
       'Czy na pewno chcesz usunąć transakcję? Tej operacji nie można cofnąć.',
@@ -107,11 +115,10 @@ export class TransactionsComponent implements OnInit {
     this.transactionService.deleteTransaction(id).subscribe({
       next: () => {
         this.loadTransactions();
+        alert('Transakcja usunięta.');
       },
       error: () => alert('Nie udao się usunąć transakcji.'),
     });
-
-    alert('Transakcja usunięta.');
   }
 
   openEditModal(transaction: TransactionResponse) {

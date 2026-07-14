@@ -35,10 +35,8 @@ public class CategoryService {
 
   public void seedDefaultCategories(User user) {
     List<String[]> defaults = List.of(
-      new String[]{"Rent", "EXPENSE"},
-      new String[]{"Food", "EXPENSE"},
-      new String[]{"Salary", "INCOME"},
-      new String[]{"Transport", "EXPENSE"}
+      new String[]{"Mieszkanie", "EXPENSE"},
+      new String[]{"Wypłata", "INCOME"}
     );
 
     List<Category> categories = defaults.stream().map(entry -> {
