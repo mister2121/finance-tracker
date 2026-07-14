@@ -39,6 +39,9 @@
           [(ngModel)]="name"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         />
+        @if (nameError) {
+          <p class="text-money-red text-xs mt-1">{{ nameError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Krótka nazwa kategorii</p>
         <label class="mt-4 text-sm font-medium text-zinc-200 block">Typ</label>
         <select
@@ -50,6 +53,9 @@
           <option [ngValue]="CategoryType.EXPENSE">Wydatki</option>
           <option [ngValue]="CategoryType.INCOME">Przychody</option>
         </select>
+        @if (selectedTypeError) {
+          <p class="text-money-red text-xs mt-1">{{ selectedTypeError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Wybierz odpowiedni typ kategorii</p>
       </div>
       <div
