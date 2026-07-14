@@ -39,6 +39,9 @@
           [(ngModel)]="name"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         />
+        @if (nameError) {
+          <p class="mt-1 text-xs text-red-500">{{ nameError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Krótka nazwa konta</p>
         <label class="mt-4 text-sm font-medium text-zinc-200 block">Typ</label>
         <select
@@ -52,14 +55,21 @@
           <option [ngValue]="AccountType.INVESTMENT">Inwestycje</option>
           <option [ngValue]="AccountType.OTHER">Inne</option>
         </select>
+        @if (selectedTypeError) {
+          <p class="mt-1 text-xs text-red-500">{{ selectedTypeError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Wybierz odpowiedni typ konta</p>
         <label class="mt-4 text-sm font-medium text-zinc-200 block">Saldo</label>
         <input
           type="number"
           name="balance"
           [(ngModel)]="balance"
+          [class.border-red-500]="balanceError"
           class="mt-2 w-full rounded-xl border border-zinc-700 bg-surface-elevated px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-colors hover:border-zinc-600 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
         />
+        @if (balanceError) {
+          <p class="mt-1 text-xs text-red-500">{{ balanceError }}</p>
+        }
         <p class="mt-1 text-xs text-zinc-500">Początkowe saldo konta</p>
         <label class="mt-4 text-sm font-medium text-zinc-200 block">Waluta</label>
         <select

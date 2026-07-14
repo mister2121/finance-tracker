@@ -20,7 +20,40 @@ export class AddAccountModal implements OnInit {
   currency = 'PLN';
   balance = 0;
 
+  // błędy:
+  nameError = '';
+  selectedTypeError = '';
+  balanceError = '';
+
   @Input() accountToEdit: DashboardAccount | null = null;
+
+  validateAccountForm(): boolean {
+    this.nameError = '';
+    this.selectedTypeError = '';
+    this.balanceError = '';
+
+    let isValid = true;
+
+    if (!this.name.trim()) {
+      this.nameError = 'Nazwa jest wymagana';
+      isValid = false;
+    }
+
+    if (!this.selectedType) {
+      this.selectedTypeError = 'Typ konta jest wymagany';
+      isValid = false;
+    }
+
+    if (this.balance === null || this.balance === undefined || isNaN(this.balance)) {
+      this.balanceError = 'Saldo jest wymagane';
+      isValid = false;
+    } else if (this.balance < 0) {
+      this.balanceError = 'Saldo nie może być ujemne';
+      isValid = false;
+    }
+
+    return isValid;
+  }
 
   ngOnInit() {
     if (this.accountToEdit) {
@@ -32,13 +65,13 @@ export class AddAccountModal implements OnInit {
   }
 
   onSubmit() {
-    if (!this.selectedType) {
+    if (!this.validateAccountForm()) {
       return;
     }
 
     const request: AccountRequest = {
       name: this.name,
-      type: this.selectedType,
+      type: this.selectedType!,
       currency: this.currency,
       balance: this.balance,
     };
