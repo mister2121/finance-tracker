@@ -58,12 +58,21 @@ export class CategoriesComponent implements OnInit {
   }
 
   deleteCategory(id: string) {
+    const confirmed = confirm(
+      'Czy na pewno chcesz usunąć kategorię? Tej operacji nie można cofnąć.',
+    );
+    if (!confirmed) {
+      return;
+    }
+
     this.categorySerivce.deleteCategory(id).subscribe({
       next: () => {
         this.loadCategories();
       },
       error: () => alert('Nie udało się usunąć kategorii.'),
     });
+
+    alert('Transakcja usunięta.');
   }
 
   openEditModal(category: Category) {

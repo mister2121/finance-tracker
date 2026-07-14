@@ -97,10 +97,21 @@ export class TransactionsComponent implements OnInit {
   }
 
   deleteTransaction(id: string) {
+    const confirmed = confirm(
+      'Czy na pewno chcesz usunąć transakcję? Tej operacji nie można cofnąć.',
+    );
+    if (!confirmed) {
+      return;
+    }
+
     this.transactionService.deleteTransaction(id).subscribe({
-      next: () => this.loadTransactions(),
+      next: () => {
+        this.loadTransactions();
+      },
       error: () => alert('Nie udao się usunąć transakcji.'),
     });
+
+    alert('Transakcja usunięta.');
   }
 
   openEditModal(transaction: TransactionResponse) {

@@ -80,5 +80,7 @@ export class AddCategoryModal implements OnInit {
         console.error('Błąd podczas zapisywania konta: ', error);
       },
     });
+
+    alert('Kategoria zapisana.');
   }
 }

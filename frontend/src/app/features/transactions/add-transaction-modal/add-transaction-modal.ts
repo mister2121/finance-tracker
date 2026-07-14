@@ -174,6 +174,8 @@ export class AddTransactionModal {
         this.cdr.detectChanges();
       },
     });
+
+    alert('Transakcja zapisana.');
   }
 
   setColorBasedOnType(type: TransactionType): string {

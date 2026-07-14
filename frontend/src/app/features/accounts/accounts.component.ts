@@ -42,6 +42,11 @@ export class AccountsComponent implements OnInit {
   }
 
   deleteAccount(id: string) {
+    const confirmed = confirm('Czy na pewno chcesz usunąć konto? Tej operacji nie można cofnąć.');
+    if (!confirmed) {
+      return;
+    }
+
     this.accountService.deleteAccount(id).subscribe({
       next: () => {
         this.closeActionSheet;
@@ -49,6 +54,8 @@ export class AccountsComponent implements OnInit {
       },
       error: () => alert('Nie udało się usunąć konta.'),
     });
+
+    alert('Transakcja usunięta.');
   }
 
   openEditModal(account: DashboardAccount) {

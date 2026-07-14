@@ -89,5 +89,7 @@ export class AddAccountModal implements OnInit {
         console.error('Błąd podczas zapisywania konta:', error);
       },
     });
+
+    alert('Konto zapisane.');
   }
 }
