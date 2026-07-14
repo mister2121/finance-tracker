@@ -1,12 +1,12 @@
 <!-- OVERLAY -->
 <div
   class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:flex lg:items-center lg:justify-center lg:p-6"
-  (click)="closed.emit()"
+  (pointerdown)="closed.emit()"
 >
   <!-- KARTA MODALA -->
   <div
     class="h-full w-full overflow-y-auto bg-surface-card lg:h-auto lg:max-h-[90vh] lg:w-[560px] lg:rounded-2xl lg:border lg:border-zinc-700 lg:shadow-2xl"
-    (click)="$event.stopPropagation()"
+    (pointerdown)="$event.stopPropagation()"
   >
     <div class="text-white">
       <div
