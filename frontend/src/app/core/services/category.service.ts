@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Category, CategoryRequest, CategoryType } from '../models/category.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
@@ -13,14 +14,14 @@ export class CategoryService {
   }
 
   createCategory(request: CategoryRequest) {
-    return this.http.post<Category>('http://localhost:8080/api/categories', request);
+    return this.http.post<Category>(`${environment.apiUrl}/api/categories`, request);
   }
 
   editCategory(id: string, request: CategoryRequest) {
-    return this.http.put<Category>(`http://localhost:8080/api/categories/${id}`, request);
+    return this.http.put<Category>(`${environment.apiUrl}/api/categories/${id}`, request);
   }
 
   deleteCategory(id: string) {
-    return this.http.delete(`http://localhost:8080/api/categories/${id}`);
+    return this.http.delete(`${environment.apiUrl}/api/categories/${id}`);
   }
 }

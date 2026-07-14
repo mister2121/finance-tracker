@@ -5,6 +5,7 @@ import {
   TransactionRequest,
   TransactionResponse,
 } from '../models/transaction.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class TransactionService {
 
   getTransactions(year: number, month: number, page: number, size: number) {
     return this.http.get<PagedResponse<TransactionResponse>>(
-      'http://localhost:8080/api/transactions',
+      `${environment.apiUrl}/api/transactions`,
       {
         params: { year, month, page, size },
       },
@@ -22,16 +23,16 @@ export class TransactionService {
   }
 
   createTransaction(request: TransactionRequest) {
-    return this.http.post<TransactionResponse>('http://localhost:8080/api/transactions', request);
+    return this.http.post<TransactionResponse>(`${environment.apiUrl}/api/transactions`, request);
   }
 
   deleteTransaction(id: string) {
-    return this.http.delete(`http://localhost:8080/api/transactions/${id}`);
+    return this.http.delete(`${environment.apiUrl}/api/transactions/${id}`);
   }
 
   editTransaction(id: string, request: TransactionRequest) {
     return this.http.put<TransactionResponse>(
-      `http://localhost:8080/api/transactions/${id}`,
+      `${environment.apiUrl}/api/transactions/${id}`,
       request,
     );
   }

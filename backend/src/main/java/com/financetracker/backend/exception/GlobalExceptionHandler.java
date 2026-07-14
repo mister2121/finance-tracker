@@ -10,14 +10,8 @@ import com.financetracker.backend.dto.response.ErrorResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-  
-  @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
-    return ResponseEntity
-    .status(HttpStatus.BAD_REQUEST)
-    .body(new ErrorResponse(400, ex.getMessage()));
-  }
 
+  // 1. Obsługa błędów walidacji requestów (400 Bad Request)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
     String message = ex.getBindingResult()
@@ -31,34 +25,44 @@ public class GlobalExceptionHandler {
       .body(new ErrorResponse(400, message));
   }
 
-  // 1. Obsługa braku zasobu (404 Not Found)
-  @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-    ErrorResponse error = new ErrorResponse(
-      HttpStatus.NOT_FOUND.value(),
-      ex.getMessage()
-    );
-    return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+  // 2. Obsługa nieprawidłowych argumentów (400 Bad Request)
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorResponse(400, ex.getMessage()));
   }
 
-  // 2. Obsługa braku dostępu (403 Forbidden)
-    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.FORBIDDEN.value(),
-                "You do not have permission to access this resource."
-        );
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
-    }
+  // 3. Obsługa braku zasobu (404 Not Found)
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+    return new ResponseEntity<>(
+      new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage()),
+      HttpStatus.NOT_FOUND
+    );
+  }
 
+  // 4. Obsługa braku dostępu (403 Forbidden)
+  @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
+    return new ResponseEntity<>(
+      new ErrorResponse(HttpStatus.FORBIDDEN.value(), "You do not have permission to access this resource."),
+      HttpStatus.FORBIDDEN
+    );
+  }
 
-  // 3. Obsługa nieautoryzowanego dostępu (401 Unauthorized)
+  // 5. Obsługa nieautoryzowanego dostępu (401 Unauthorized)
   @ExceptionHandler(UnauthorizedException.class)
   public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex) {
-    ErrorResponse error = new ErrorResponse(
-      HttpStatus.UNAUTHORIZED.value(),
-      ex.getMessage()
+    return new ResponseEntity<>(
+      new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage()),
+      HttpStatus.UNAUTHORIZED
     );
-    return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+  }
+
+  // 6. Obsługa wszystkich pozostałych wyjątków (500 Internal Server Error)
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(new ErrorResponse(500, "Internal server error"));
   }
 }

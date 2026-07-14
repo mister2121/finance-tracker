@@ -106,6 +106,11 @@ public class TransactionService {
         } else {
           Account toAccount = accountRepository.findById(request.getToAccountId())
                   .orElseThrow(() -> new ResourceNotFoundException("Target account not found"));
+
+          if (!toAccount.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("No access to target account");
+          }
+
           account.setBalance(account.getBalance().subtract(request.getAmount()));
           toAccount.setBalance(toAccount.getBalance().add(request.getAmount()));
           accountRepository.save(account);
@@ -162,22 +167,48 @@ public class TransactionService {
       throw new UnauthorizedException("No access to this transaction");
     }
 
-    Account account = accountRepository.findById(request.getAccountId())
-    .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+    Account oldAccount = transaction.getAccount();
+    BigDecimal oldAmount = transaction.getAmount();
+    TransactionType type = transaction.getType();
 
-    Category category = request.getCategoryId() != null 
+    Account newAccount = accountRepository.findById(request.getAccountId())
+      .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+    if (!newAccount.getUser().getId().equals(user.getId())) {
+      throw new UnauthorizedException("No access to this account");
+    }
+
+    // Cofnij stary efekt na starym koncie
+    if (type == TransactionType.INCOME) {
+      oldAccount.setBalance(oldAccount.getBalance().subtract(oldAmount));
+    } else if (type == TransactionType.EXPENSE) {
+      oldAccount.setBalance(oldAccount.getBalance().add(oldAmount));
+    }
+    // TRANSFER - CELOWE POMINIĘCIE, ZA DUŻO EDGE CASEÓW KTÓRE MOGĄ PSUĆ LOGIKE BIZNESOWĄ
+
+    // Nałóż nowy efekt na nowym koncie
+    if (type == TransactionType.INCOME) {
+      newAccount.setBalance(newAccount.getBalance().add(request.getAmount()));
+    } else if (type == TransactionType.EXPENSE) {
+      newAccount.setBalance(newAccount.getBalance().subtract(request.getAmount()));
+    }
+
+    accountRepository.save(oldAccount);
+    if (!oldAccount.getId().equals(newAccount.getId())) {
+      accountRepository.save(newAccount);
+    }
+
+    Category category = request.getCategoryId() != null
       ? categoryRepository.findById(request.getCategoryId())
-        .orElseThrow(() -> new ResourceNotFoundException("Category not found"))
+          .orElseThrow(() -> new ResourceNotFoundException("Category not found"))
       : null;
 
-    transaction.setUser(user);
-    transaction.setAccount(account);
+    transaction.setAccount(newAccount);
     transaction.setCategory(category);
-    transaction.setType(request.getType());
     transaction.setAmount(request.getAmount());
     transaction.setTransactionDate(request.getTransactionDate());
     transaction.setNote(request.getNote());
-    
+
     Transaction savedTransaction = transactionRepository.saveAndFlush(transaction);
     return mapToResponse(savedTransaction);
   }

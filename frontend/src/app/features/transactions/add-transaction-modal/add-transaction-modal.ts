@@ -89,17 +89,8 @@ export class AddTransactionModal {
 
     let isValid = true;
 
-    if (this.amount === null || this.amount === undefined || `${this.amount}`.trim() === '') {
-      this.amountError = 'Kwota jest wymagana';
-      isValid = false;
-    } else if (this.selectedType === TransactionType.EXPENSE && this.amount >= 0) {
-      this.amountError = 'Kwota wydatku musi być mniejsza od zera';
-      isValid = false;
-    } else if (this.selectedType === TransactionType.INCOME && this.amount <= 0) {
-      this.amountError = 'Kwota przychodu musi być większa od zera';
-      isValid = false;
-    } else if (this.selectedType === TransactionType.TRANSFER && this.amount <= 0) {
-      this.amountError = 'Kwota transferu musi być większa od zera';
+    if (this.amount <= 0) {
+      this.amountError = 'Kwota musi być większa od zera';
       isValid = false;
     }
 

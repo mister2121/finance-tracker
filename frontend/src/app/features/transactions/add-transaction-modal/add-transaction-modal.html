@@ -91,10 +91,10 @@
           <p class="mt-1 text-xs text-money-red">{{ amountError }}</p>
         }
         <p class="mt-1 text-xs text-zinc-500">Wpisz kwotę transakcji</p>
-        @if (transactionToEdit) {
+        @if (transactionToEdit && transactionToEdit.type === TransactionType.TRANSFER) {
           <p class="mt-1 text-xs text-amber-400/80">
-            ⚠️ Zmiana kwoty nie zaktualizuje automatycznie łącznego majątku konta. Aby skorygować
-            saldo, edytuj konto ręcznie, lub dodaj nową transakcję.
+            ⚠️ Edycja TRANSFERU nie aktualizuje automatycznie sald kont. Aby uniknąć błędów, edytuj
+            konta ręcznie, lub usuń i dodaj TRANSFER ponownie.
           </p>
         }
         <label class="mt-4 text-sm font-medium text-zinc-200">Opis</label>

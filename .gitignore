@@ -6,6 +6,7 @@ backend/.mvn/
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
+frontend/src/environments/environment.prod.ts
 
 # Sekrety 
 backend/src/main/resources/application.properties
@@ -13,3 +14,4 @@ backend/src/main/resources/application.properties
 # IDE
 .vscode/
 *.class
+

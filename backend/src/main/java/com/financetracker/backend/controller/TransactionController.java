@@ -63,9 +63,9 @@ public class TransactionController {
     }
 
   @PutMapping("/{id}")
-public ResponseEntity<TransactionResponse> editTransaction(
+  public ResponseEntity<TransactionResponse> editTransaction(
     @PathVariable UUID id,
     @Valid @RequestBody TransactionRequest request) {
   return ResponseEntity.ok(transactionService.editTransaction(id, request));
-}
+  }
 }
