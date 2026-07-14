@@ -31,8 +31,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   private dashboardService = inject(DashboardService);
   private cdr = inject(ChangeDetectorRef);
 
+  // wykres laczny majatek
   @ViewChild('netWorthChart') netWorthChartRef?: ElementRef<HTMLCanvasElement>;
   private chartInstance: Chart | null = null;
+
+  // wykres pie chart wydatki per kategoria
+  @ViewChild('expenseChart') expenseChartRef?: ElementRef<HTMLCanvasElement>;
+  private expenseChartInstance: Chart | null = null;
 
   dashboard: Dashboard | null = null;
   netWorthHistory: NetWorthPoint[] = [];
@@ -56,6 +61,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (this.netWorthHistory.length) {
       setTimeout(() => this.renderChart());
     }
+    if (this.dashboard) {
+      setTimeout(() => this.renderExpenseChart());
+    }
   }
 
   loadDashboard() {
@@ -67,6 +75,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       next: (dashboard) => {
         this.dashboard = dashboard;
         this.cdr.detectChanges();
+        setTimeout(() => this.renderExpenseChart());
       },
       error: () => {},
     });
@@ -83,6 +92,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // WYKRES HISTORIA MAJATKU
   renderChart() {
     if (!this.netWorthChartRef?.nativeElement) return;
 
@@ -137,6 +147,46 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // PIE CHART
+  renderExpenseChart() {
+    if (!this.expenseChartRef?.nativeElement || !this.dashboard) return;
+
+    this.expenseChartInstance?.destroy();
+
+    const breakdown = this.dashboard.expenseBreakdown;
+    if (!breakdown.length) return;
+
+    const ctx = this.expenseChartRef.nativeElement.getContext('2d')!;
+
+    this.expenseChartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: breakdown.map((e) => e.categoryName),
+        datasets: [
+          {
+            data: breakdown.map((e) => e.percentage),
+            backgroundColor: breakdown.map((_, i) => this.getCategoryColor(i, breakdown.length)),
+            borderColor: '#18181b',
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => `${context.label}: ${context.formattedValue}%`,
+            },
+          },
+        },
+      },
+    });
+  }
+
   onLogout() {
     this.authService.logout();
     this.router.navigate(['/login']);
@@ -177,5 +227,28 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (change > 0) return 'text-money-green';
     if (change < 0) return 'text-money-red';
     return 'text-white';
+  }
+
+  // pie chart wykres wydatki wg kategorii
+  private readonly baseCategoryColors = [
+    '#8b5cf6', // brand-purple
+    '#ef4444', // money-red
+    '#22c55e', // money-green
+    '#3b82f6', // money-blue
+    '#f59e0b',
+    '#ec4899',
+    '#14b8a6',
+    '#a855f7',
+  ];
+
+  getCategoryColor(index: number, total: number): string {
+    // najpierw uzywamy naszych stworzonych 8 kolorow
+    if (total <= this.baseCategoryColors.length) {
+      return this.baseCategoryColors[index];
+    }
+
+    // jezeli uzytkownik stworzy wiecej kategorii, generujemy ich kolory w HSL
+    const hue = (index * (360 / total)) % 360;
+    return `hsl(${hue}, 70%, 60%)`;
   }
 }
