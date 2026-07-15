@@ -32,6 +32,14 @@ public class GlobalExceptionHandler {
         .body(new ErrorResponse(400, ex.getMessage()));
   }
 
+  // 3. Obsługa zajętego uzytkownika (409 Conflict)
+  @ExceptionHandler(UserAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT) 
+        .body(new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage()));
+  }
+
   // 3. Obsługa braku zasobu (404 Not Found)
   @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {

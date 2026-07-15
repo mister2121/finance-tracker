@@ -140,6 +140,8 @@
           </div>
           <p>{{ account.balance | currency: 'PLN' : 'symbol' : '1.2-2' : 'pl-PL' }}</p>
         </div>
+      } @empty {
+        <p class="text-center py-6 text-zinc-500 italic">Brak kont do wyświetlenia.</p>
       }
     </div>
 
@@ -196,6 +198,8 @@
               }}{{ transaction.amount | currency: 'PLN' : 'symbol' : '1.2-2' : 'pl-PL' }}
             </p>
           </div>
+        } @empty {
+          <p class="text-center py-6 text-zinc-500 italic">Brak transakcji do wyświetlenia.</p>
         }
       </div>
     </div>
@@ -255,6 +259,8 @@
             <!-- procent -->
             <p class="w-10 text-right text-sm flex-shrink-0">{{ expense.percentage }}%</p>
           </div>
+        } @empty {
+          <p class="text-center py-6 text-zinc-500 italic">Brak wydatków do wyświetlenia.</p>
         }
       </div>
     </div>

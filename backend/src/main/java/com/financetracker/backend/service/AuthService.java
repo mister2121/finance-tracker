@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.financetracker.backend.dto.request.LoginRequest;
 import com.financetracker.backend.dto.request.RegisterRequest;
 import com.financetracker.backend.dto.response.AuthResponse;
+import com.financetracker.backend.exception.UserAlreadyExistsException;
 import com.financetracker.backend.model.User;
 import com.financetracker.backend.repository.UserRepository;
 import com.financetracker.backend.security.JwtService;
@@ -24,7 +25,7 @@ public class AuthService {
 
   public AuthResponse register(RegisterRequest request) {
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new RuntimeException("Email is already in use");
+      throw new UserAlreadyExistsException("Email is already in use");
     }
 
     User user = new User();
