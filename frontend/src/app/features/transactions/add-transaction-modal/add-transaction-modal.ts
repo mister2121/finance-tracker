@@ -32,7 +32,7 @@ export class AddTransactionModal {
   accounts: DashboardAccount[] = [];
   categories: Category[] = [];
   selectedType: TransactionType = TransactionType.EXPENSE;
-  amount: number = 0;
+  amount: number | null = null;
   accountId = '';
   categoryId = '';
   transactionDate = new Date().toISOString().split('T')[0];
@@ -89,7 +89,7 @@ export class AddTransactionModal {
 
     let isValid = true;
 
-    if (this.amount <= 0) {
+    if (this.amount === null || this.amount <= 0) {
       this.amountError = 'Kwota musi być większa od zera';
       isValid = false;
     }
